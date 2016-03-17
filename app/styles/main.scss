@@ -28,7 +28,7 @@ body {
 }
 
 /* Phrase and letters */
-.phrase {
+#phrase {
   font: 46px 'Source Code Pro', monospace;
   color: #fff;
   text-shadow: 1px 1px rgba(0,0,0,0.8);
@@ -36,7 +36,7 @@ body {
   margin-bottom: 60px;
 }
 
-ul.letters {
+ul#letters {
   margin: 0;
   padding: 0;
   max-width: 350px;
