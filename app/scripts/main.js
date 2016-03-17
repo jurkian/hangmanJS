@@ -37,3 +37,40 @@ for (var i = 0; i < letters.length; i++) {
   singleLetterLi.innerHTML = letters.charAt(i);
   lettersList.appendChild(singleLetterLi);
 }
+
+// Check letter
+var singleLetters = lettersList.getElementsByTagName('li');
+
+// Handle the click on each letter
+var lives = 5,
+  isGameOver = (lives === 0) ? true : false;
+
+for (var i = 0; i < singleLetters.length; i++) {
+  singleLetters[i].addEventListener('click', checkLetter, false);
+}
+
+function checkLetter() {
+  var clickedLetter = this.innerHTML;
+
+  // Check if the clicked letter is one of these hidden in the phrase
+  for (var i = 0; i < correctPhrase.length; i++) {
+
+    if (correctPhrase.charAt(i) === clickedLetter) {
+      // Letter found
+      revealLetter(clickedLetter);
+      return;
+    }
+
+  }
+
+  // Letter not found
+  incorrectGuess();
+}
+
+function revealLetter() {
+
+}
+
+function incorrectGuess() {
+
+}
