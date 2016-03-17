@@ -1,61 +1,69 @@
 <!doctype html>
-<html lang="">
-  <head>
-    <meta charset="utf-8">
-    <title>aplikacja</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
 
-    <link rel="shortcut icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+<head>
+  <meta charset="utf-8">
+  <title>HangmanJS</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <link rel="stylesheet" href="styles/main.css">
-  </head>
-  <body>
-    
-    <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-        <h3 class="text-muted">Lorem ipsum.</h3>
-      </div>
+  <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
 
-      <div class="jumbotron">
-        <h1>'Allo, 'Allo!</h1>
-        <p class="lead">Always a pleasure scaffolding your apps.</p>
-        <p><a class="btn btn-lg btn-success" href="#">Splendid! <span class="glyphicon glyphicon-ok"></span></a></p>
-      </div>
-
-      <div class="row marketing">
-        <div class="col-lg-6">
-          <h4><a href="https://html5boilerplate.com/">HTML5 Boilerplate</a></h4>
-          <p>HTML5 Boilerplate is a professional front-end template for building fast, robust, and adaptable web apps or sites.</p>
-
-          <h4><a href="http://libsass.org/">Sass</a></h4>
-          <p>Sass is a mature, stable, and powerful professional grade CSS extension language.</p>
-          
-
-          <h4><a href="http://getbootstrap.com/">Bootstrap</a></h4>
-          <p>Sleek, intuitive, and powerful mobile first front-end framework for faster and easier web development.</p>
-          
+<body>
+  <section id="game" class="container">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-2">
+        <div class="gallows">
+          <div class="hangman"></div>
         </div>
       </div>
-
-      <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
+      <div class="col-md-4">
+        <div class="phrase">
+          COM__T_R
+        </div>
+        <ul class="letters">
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+          <li>A</li>
+        </ul>
       </div>
     </div>
+  </section>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <!-- build:js scripts/vendor.min.js -->
+  <script src="scripts/vendor/bootstrap.min.js"></script>
+  <!-- /build -->
+  <!-- build:js scripts/scripts.min.js -->
+  <script src="scripts/main.js"></script>
+  <!-- /build -->
+</body>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-    <!-- build:js scripts/vendor.min.js -->
-    <script src="scripts/vendor/bootstrap.min.js"></script>
-    <!-- /build -->
-    <!-- build:js scripts/scripts.min.js -->
-    <script src="scripts/main.js"></script>
-    <!-- /build -->
-  </body>
 </html>
