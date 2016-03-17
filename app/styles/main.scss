@@ -17,13 +17,14 @@ body {
   height: 500px;
   position: relative;
 
-  .hangman {
+  #hangman {
     background: url('../images/hangman.png') no-repeat;
     width: 125px;
     height: 287px;
     position: absolute;
     left: 110px;
     top: 29px;
+    transition: all .35s ease-out;
 
     opacity: 0;
   }
@@ -60,6 +61,7 @@ ul#letters {
     line-height: 20px;
     text-shadow: 1px 1px rgba(0,0,0,0.4);
     cursor: pointer;
+    transition: all .2s ease-out;
 
     &:hover {
       background: rgba(0,0,0,0.6);
