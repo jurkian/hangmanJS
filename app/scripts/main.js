@@ -5,13 +5,11 @@ String.prototype.replaceAt = function(index, character) {
 
 // Draw randomly masked phrase
 var correctPhrase = 'Computer',
-  maskedLettersLeft = '';
+  maskedPhrase = correctPhrase;
 
 function maskLetters(correctPhrase) {
   // Mask 60% of the given correctPhrase
-  var howManyLettersToMask = Math.floor(correctPhrase.length * 0.6),
-    maskedLettersLeft = howManyLettersToMask,
-    maskedPhrase = correctPhrase;
+  var howManyLettersToMask = Math.floor(correctPhrase.length * 0.6);
 
   while (howManyLettersToMask > 0) {
     var random = Math.floor(Math.random() * correctPhrase.length);
@@ -45,8 +43,7 @@ var singleLetters = lettersList.getElementsByTagName('li');
 
 // Handle the click on each letter
 var totalLives = 5,
-	livesLeft = totalLives,
-	isPhraseRevealed = (maskedLettersLeft === 0) ? true : false;
+  livesLeft = totalLives;
 
 for (var i = 0; i < singleLetters.length; i++) {
   singleLetters[i].addEventListener('click', checkLetter, false);
@@ -58,7 +55,8 @@ function checkLetter() {
   // Check if the clicked letter is one of these hidden in the phrase
   for (var i = 0; i < correctPhrase.length; i++) {
 
-    if (correctPhrase.charAt(i) === clickedLetter) {
+    // Convert both characters to upper case, to compare it as case insensitive
+    if (correctPhrase.charAt(i).toUpperCase() == clickedLetter.toUpperCase()) {
       // Letter found
       revealLetter(clickedLetter);
       return;
@@ -71,31 +69,59 @@ function checkLetter() {
 }
 
 function revealLetter(letterToReveal) {
-	// Reveal the letter
-	// ...
-	
-	// Check if user has won
-	// ...
+
+  // Reveal the letter (can be multiple letters)
+  for (var i = 0; i < maskedPhrase.length; i++) {
+    
+    if (correctPhrase.charAt(i).toUpperCase() == letterToReveal.toUpperCase()) {
+      // To make sure the correct letter case is replaced,
+      // get the letter from correct phrase, basing on index
+      maskedPhrase = maskedPhrase.replaceAt(i, correctPhrase.charAt(i));
+    }
+  }
+
+  document.getElementById('phrase').innerHTML = maskedPhrase;
+
+  // Check if user has won
+  isPhraseRevealed = (maskedPhrase.indexOf('_') == -1) ? true : false;
+  
+  if (isPhraseRevealed) {
+    finishGame('won');
+  }
 }
 
 function incorrectGuess() {
-	// Reduce lives and start showing the hangman
-	livesLeft--;
+  // Reduce lives and start showing the hangman
+  livesLeft--;
 
-	var hangman = document.getElementById('hangman'),
-			opacityToAdd = 1 / totalLives,
-			hangmanOpacity = hangman.style.opacity || 0;
+  var hangman = document.getElementById('hangman'),
+    opacityToAdd = 1 / totalLives,
+    hangmanOpacity = hangman.style.opacity || 0;
 
-	hangman.style.opacity = parseFloat(hangmanOpacity) + parseFloat(opacityToAdd);
+  hangman.style.opacity = parseFloat(hangmanOpacity) + parseFloat(opacityToAdd);
 
-	// If no more lives left -> game over
-	if (livesLeft === 0) {
+  // If no more lives left -> game over
+  if (livesLeft === 0) {
 
-		// Disable click on letters and show message
-		for (var i = 0; i < singleLetters.length; i++) {
-		  singleLetters[i].removeEventListener('click', checkLetter);
-		}
+    finishGame('lost');
+  }
+}
 
-		alert('Ooops... You\'ve just lost a game. Please refresh and try again!');
-	}
+function finishGame(status) {
+  // Disable click on letters and show message
+  for (var i = 0; i < singleLetters.length; i++) {
+    singleLetters[i].removeEventListener('click', checkLetter);
+  }
+
+  switch (status) {
+    case 'won':
+      alert('Congratulations, you won! Now you can refresh and try again.');
+      break;
+
+    case 'lost':
+      alert('Ooops... You\'ve just lost a game. Please refresh and try again!');
+      break;
+
+    default:
+  }
 }
