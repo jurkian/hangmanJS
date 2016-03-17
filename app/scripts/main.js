@@ -4,11 +4,13 @@ String.prototype.replaceAt = function(index, character) {
 };
 
 // Draw randomly masked phrase
-var correctPhrase = 'Computer';
+var correctPhrase = 'Computer',
+  maskedLettersLeft = '';
 
 function maskLetters(correctPhrase) {
   // Mask 60% of the given correctPhrase
   var howManyLettersToMask = Math.floor(correctPhrase.length * 0.6),
+    maskedLettersLeft = howManyLettersToMask,
     maskedPhrase = correctPhrase;
 
   while (howManyLettersToMask > 0) {
@@ -42,8 +44,9 @@ for (var i = 0; i < letters.length; i++) {
 var singleLetters = lettersList.getElementsByTagName('li');
 
 // Handle the click on each letter
-var lives = 5,
-  isGameOver = (lives === 0) ? true : false;
+var totalLives = 5,
+	livesLeft = totalLives,
+	isPhraseRevealed = (maskedLettersLeft === 0) ? true : false;
 
 for (var i = 0; i < singleLetters.length; i++) {
   singleLetters[i].addEventListener('click', checkLetter, false);
@@ -67,10 +70,32 @@ function checkLetter() {
   incorrectGuess();
 }
 
-function revealLetter() {
-
+function revealLetter(letterToReveal) {
+	// Reveal the letter
+	// ...
+	
+	// Check if user has won
+	// ...
 }
 
 function incorrectGuess() {
+	// Reduce lives and start showing the hangman
+	livesLeft--;
 
+	var hangman = document.getElementById('hangman'),
+			opacityToAdd = 1 / totalLives,
+			hangmanOpacity = hangman.style.opacity || 0;
+
+	hangman.style.opacity = parseFloat(hangmanOpacity) + parseFloat(opacityToAdd);
+
+	// If no more lives left -> game over
+	if (livesLeft === 0) {
+
+		// Disable click on letters and show message
+		for (var i = 0; i < singleLetters.length; i++) {
+		  singleLetters[i].removeEventListener('click', checkLetter);
+		}
+
+		alert('Ooops... You\'ve just lost a game. Please refresh and try again!');
+	}
 }
