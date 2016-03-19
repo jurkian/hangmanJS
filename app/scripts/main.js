@@ -4,28 +4,15 @@ String.prototype.replaceAt = function(index, character) {
 };
 
 // Draw randomly masked phrase
-var correctPhrase = 'Computer',
-  maskedPhrase = correctPhrase;
+var correctPhrase = 'Computer type'.toUpperCase(),
+  maskedPhrase = '',
+  visibleLetters = [];
 
-function maskLetters(correctPhrase) {
-  // Mask 60% of the given correctPhrase
-  var howManyLettersToMask = Math.floor(correctPhrase.length * 0.6);
+maskedPhrase = maskLetters(correctPhrase);
+document.getElementById('phrase').innerHTML = maskedPhrase;
 
-  while (howManyLettersToMask > 0) {
-    var random = Math.floor(Math.random() * correctPhrase.length);
-
-    if (maskedPhrase.charAt(random) != '_') {
-      maskedPhrase = maskedPhrase.replaceAt(random, '_');
-      howManyLettersToMask--;
-    } else {
-      continue;
-    }
-  }
-
-  return maskedPhrase;
-}
-
-document.getElementById('phrase').innerHTML = maskLetters(correctPhrase);
+// Get visible letters
+visibleLetters = getVisibleLetters(maskedPhrase);
 
 // Draw alphabet
 var letters = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
@@ -38,7 +25,6 @@ for (var i = 0; i < letters.length; i++) {
   lettersList.appendChild(singleLetterLi);
 }
 
-// Check letter
 var singleLetters = lettersList.getElementsByTagName('li');
 
 // Handle the click on each letter
@@ -47,6 +33,49 @@ var totalLives = 5,
 
 for (var i = 0; i < singleLetters.length; i++) {
   singleLetters[i].addEventListener('click', checkLetter, false);
+}
+
+/* FUNCTIONS */
+
+function maskLetters(correctPhrase) {
+  // Mask 60% of the given correctPhrase
+  var howManyLettersToMask = Math.floor(correctPhrase.length * 0.6),
+    maskedPhrase = correctPhrase;
+
+  while (howManyLettersToMask > 0) {
+    var random = Math.floor(Math.random() * correctPhrase.length),
+      letter = correctPhrase.charAt(random);
+
+    // Mask a letter if it's not '_' or ' '
+    if (letter != '_' && letter != ' ') {
+      maskedPhrase = maskedPhrase.replaceAt(random, '_');
+      howManyLettersToMask--;
+    } else {
+      continue;
+    }
+  }
+
+  return maskedPhrase;
+}
+
+function getVisibleLetters(maskedPhrase) {
+  var duplicateLetters = [],
+    phrase = maskedPhrase.split(''),
+    visibleLetters = [];
+
+  for (var i = 0; i < phrase.length; i++) {
+    // If you find '_' or ' ' or a duplicate letter - continue
+    if (phrase[i] == '_' || phrase[i] == ' ' || duplicateLetters.indexOf(phrase[i]) > -1) {
+      continue;
+
+    } else {
+      visibleLetters.push(phrase[i]);
+      duplicateLetters.push(phrase[i]);
+
+    }
+  }
+
+  return visibleLetters;
 }
 
 function checkLetter() {
@@ -72,7 +101,7 @@ function revealLetter(letterToReveal) {
 
   // Reveal the letter (can be multiple letters)
   for (var i = 0; i < maskedPhrase.length; i++) {
-    
+
     if (correctPhrase.charAt(i).toUpperCase() == letterToReveal.toUpperCase()) {
       // To make sure the correct letter case is replaced,
       // get the letter from correct phrase, basing on index
@@ -84,7 +113,7 @@ function revealLetter(letterToReveal) {
 
   // Check if user has won
   isPhraseRevealed = (maskedPhrase.indexOf('_') == -1) ? true : false;
-  
+
   if (isPhraseRevealed) {
     finishGame('won');
   }
