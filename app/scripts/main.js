@@ -12,7 +12,6 @@ maskedPhrase = maskLetters(correctPhrase);
 document.getElementById('phrase').innerHTML = maskedPhrase;
 
 visibleLetters = getVisibleLetters(maskedPhrase);
-var visibleLettersIndexes = [];
 
 // Draw alphabet
 var letters = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
@@ -23,11 +22,6 @@ for (var i = 0; i < letters.length; i++) {
 
   singleLetterLi.innerHTML = letters.charAt(i);
   lettersList.appendChild(singleLetterLi);
-
-  // If current letter is the same as one of the visibles - save it
-  if (visibleLetters.indexOf(letters.charAt(i)) > -1) {
-    visibleLettersIndexes.push(i);
-  }
 }
 
 // Handle the click on each letter
@@ -42,12 +36,6 @@ for (var i = 0; i < singleLetters.length; i++) {
 // Make sure every instance of uncovered letter is visible
 for (var i = 0; i < visibleLetters.length; i++) {
   revealLetter(visibleLetters[i]);
-}
-
-// Show every uncovered letter as active on the alphabet and deactivate click event
-for (var i = 0; i < visibleLettersIndexes.length; i++) {
-  singleLetters[visibleLettersIndexes[i]].className += ' letter-active';
-  singleLetters[visibleLettersIndexes[i]].removeEventListener('click', checkLetter);
 }
 
 /* FUNCTIONS */
@@ -121,6 +109,11 @@ function revealLetter(letterToReveal) {
       // To make sure the correct letter case is replaced,
       // get the letter from correct phrase, basing on index
       maskedPhrase = maskedPhrase.replaceAt(i, correctPhrase.charAt(i));
+
+      // Show every uncovered letter as active on the alphabet and deactivate click event
+      var indexLetterToReveal = letters.indexOf(letterToReveal);
+      singleLetters[indexLetterToReveal].className += ' letter-active';
+      singleLetters[indexLetterToReveal].removeEventListener('click', checkLetter);
     }
   }
 
