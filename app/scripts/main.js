@@ -4,7 +4,7 @@ String.prototype.replaceAt = function(index, character) {
 };
 
 // Draw randomly masked phrase
-var correctPhrase = 'Computer',
+var correctPhrase = 'Computer type'.toUpperCase(),
   maskedPhrase = correctPhrase;
 
 function maskLetters(correctPhrase) {
@@ -14,7 +14,7 @@ function maskLetters(correctPhrase) {
   while (howManyLettersToMask > 0) {
     var random = Math.floor(Math.random() * correctPhrase.length);
 
-    if (maskedPhrase.charAt(random) != '_') {
+    if (maskedPhrase.charAt(random) != '_' && maskedPhrase.charAt(random) != ' ') {
       maskedPhrase = maskedPhrase.replaceAt(random, '_');
       howManyLettersToMask--;
     } else {
