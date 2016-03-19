@@ -63,8 +63,12 @@ ul#letters {
     cursor: pointer;
     transition: all .2s ease-out;
 
-    &:hover {
+    &:hover, &.letter-active {
       background: rgba(0,0,0,0.6);
+    }
+
+    &.letter-active {
+      cursor: default;
     }
   }
 }

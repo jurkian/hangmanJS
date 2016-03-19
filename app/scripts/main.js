@@ -11,8 +11,8 @@ var correctPhrase = 'Computer type'.toUpperCase(),
 maskedPhrase = maskLetters(correctPhrase);
 document.getElementById('phrase').innerHTML = maskedPhrase;
 
-// Get visible letters
 visibleLetters = getVisibleLetters(maskedPhrase);
+var visibleLettersIndexes = [];
 
 // Draw alphabet
 var letters = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
@@ -23,16 +23,31 @@ for (var i = 0; i < letters.length; i++) {
 
   singleLetterLi.innerHTML = letters.charAt(i);
   lettersList.appendChild(singleLetterLi);
+
+  // If current letter is the same as one of the visibles - save it
+  if (visibleLetters.indexOf(letters.charAt(i)) > -1) {
+    visibleLettersIndexes.push(i);
+  }
 }
 
-var singleLetters = lettersList.getElementsByTagName('li');
-
 // Handle the click on each letter
-var totalLives = 5,
+var singleLetters = lettersList.getElementsByTagName('li'),
+  totalLives = 5,
   livesLeft = totalLives;
 
 for (var i = 0; i < singleLetters.length; i++) {
   singleLetters[i].addEventListener('click', checkLetter, false);
+}
+
+// Make sure every instance of uncovered letter is visible
+for (var i = 0; i < visibleLetters.length; i++) {
+  revealLetter(visibleLetters[i]);
+}
+
+// Show every uncovered letter as active on the alphabet and deactivate click event
+for (var i = 0; i < visibleLettersIndexes.length; i++) {
+  singleLetters[visibleLettersIndexes[i]].className += ' letter-active';
+  singleLetters[visibleLettersIndexes[i]].removeEventListener('click', checkLetter);
 }
 
 /* FUNCTIONS */
