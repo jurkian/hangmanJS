@@ -41,8 +41,8 @@ for (var i = 0; i < visibleLetters.length; i++) {
 /* FUNCTIONS */
 
 function maskLetters(correctPhrase) {
-  // Mask 60% of the given correctPhrase
-  var howManyLettersToMask = Math.floor(correctPhrase.length * 0.6),
+  // Mask 85% of the given correctPhrase
+  var howManyLettersToMask = Math.floor(correctPhrase.length * 0.85),
     maskedPhrase = correctPhrase;
 
   while (howManyLettersToMask > 0) {
