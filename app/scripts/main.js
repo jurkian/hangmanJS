@@ -96,6 +96,10 @@ function checkLetter() {
 
   }
 
+  // You can use every letter only once
+  var deactivateIndex = letters.indexOf(clickedLetter);
+  deactivateLetter(deactivateIndex);
+
   // Letter not found
   incorrectGuess();
 }
@@ -112,8 +116,7 @@ function revealLetter(letterToReveal) {
 
       // Show every uncovered letter as active on the alphabet and deactivate click event
       var indexLetterToReveal = letters.indexOf(letterToReveal);
-      singleLetters[indexLetterToReveal].className += ' letter-active';
-      singleLetters[indexLetterToReveal].removeEventListener('click', checkLetter);
+      deactivateLetter(indexLetterToReveal);
     }
   }
 
@@ -125,6 +128,11 @@ function revealLetter(letterToReveal) {
   if (isPhraseRevealed) {
     finishGame('won');
   }
+}
+
+function deactivateLetter(index) {
+  singleLetters[index].className += ' letter-active';
+  singleLetters[index].removeEventListener('click', checkLetter);
 }
 
 function incorrectGuess() {
