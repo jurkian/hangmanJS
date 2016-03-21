@@ -1,18 +1,16 @@
-// Replace character method
-String.prototype.replaceAt = function(index, character) {
-  return this.substr(0, index) + character + this.substr(index + character.length);
-};
+
 
 // Run the game if all assets are loaded
 window.onload = function() {
 
-  // Draw randomly masked phrase
+  // Get random phrase
   var init = function() {
     var request = new XMLHttpRequest();
+
     request.onreadystatechange = function() {
       if (request.readyState == 4 && request.status == 200) {
 
-        // Success - get random phrase
+        // Success - launch the game
         var json = JSON.parse(request.responseText),
           random = Math.floor(Math.random() * json.length);
 
@@ -27,10 +25,12 @@ window.onload = function() {
 
   // Variables
   var maskedPhrase = '',
+    alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
+    letters = document.getElementById('alphabet'),
+    singleLetters = letters.getElementsByTagName('li'),
     visibleLetters = '',
-    letters = '',
-    singleLetters = '',
-    totalLives = '';
+    totalLives = 5,
+    livesLeft = totalLives;
 
   init();
 
@@ -38,25 +38,18 @@ window.onload = function() {
     maskedPhrase = maskLetters(correctPhrase);
     visibleLetters = getVisibleLetters(maskedPhrase);
 
+    // Draw randomly masked phrase
     document.getElementById('phrase').innerHTML = maskedPhrase;
 
     // Draw alphabet
-    letters = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase();
-    lettersList = document.getElementById('letters');
-
-    for (var i = 0; i < letters.length; i++) {
+    for (var i = 0; i < alphabet.length; i++) {
       var singleLetterLi = document.createElement('li');
 
-      singleLetterLi.innerHTML = letters.charAt(i);
-      lettersList.appendChild(singleLetterLi);
+      singleLetterLi.innerHTML = alphabet.charAt(i);
+      letters.appendChild(singleLetterLi);
     }
 
     // Handle the click on each letter
-    singleLetters = lettersList.getElementsByTagName('li');
-
-    totalLives = 5;
-    livesLeft = totalLives;
-
     for (i = 0; i < singleLetters.length; i++) {
       singleLetters[i].addEventListener('click', checkLetter, false);
     }
@@ -68,6 +61,10 @@ window.onload = function() {
   };
 
   /* FUNCTIONS */
+
+  String.prototype.replaceAt = function(index, character) {
+    return this.substr(0, index) + character + this.substr(index + character.length);
+  };
 
   function maskLetters(correctPhrase) {
     // Mask 85% of the given correctPhrase
@@ -123,7 +120,7 @@ window.onload = function() {
     }
 
     // You can use every letter only once
-    var deactivateIndex = letters.indexOf(clickedLetter);
+    var deactivateIndex = alphabet.indexOf(clickedLetter);
     deactivateLetter(deactivateIndex);
 
     // Letter not found
@@ -141,7 +138,7 @@ window.onload = function() {
         maskedPhrase = maskedPhrase.replaceAt(i, correctPhrase.charAt(i));
 
         // Show every uncovered letter as active on the alphabet and deactivate click event
-        var indexLetterToReveal = letters.indexOf(letterToReveal);
+        var indexLetterToReveal = alphabet.indexOf(letterToReveal);
         deactivateLetter(indexLetterToReveal);
       }
     }
