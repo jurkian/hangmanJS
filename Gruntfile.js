@@ -148,14 +148,13 @@ module.exports = function(grunt) {
 
     jshint: {
       dev: {
-        src: ['<%= config.app %>/scripts/{,*/}*.js', '!<%= config.app %>/scripts/vendor/*']
+        src: ['<%= config.app %>/scripts/{,*/}*.js']
       }
     },
 
     uglify: {
       dist: {
         files: {
-          '<%= config.dist %>/scripts/vendor.min.js': ['<%= config.app %>/scripts/vendor/*.js'],
           '<%= config.dist %>/scripts/scripts.min.js': ['<%= config.app %>/scripts/*.js']
         }
       }
