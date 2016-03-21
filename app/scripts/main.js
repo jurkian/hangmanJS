@@ -7,39 +7,65 @@ String.prototype.replaceAt = function(index, character) {
 window.onload = function() {
 
   // Draw randomly masked phrase
-  var correctPhrase = 'Computer type'.toUpperCase(),
-    maskedPhrase = '',
-    visibleLetters = [];
+  var init = function() {
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      if (request.readyState == 4 && request.status == 200) {
 
-  maskedPhrase = maskLetters(correctPhrase);
-  document.getElementById('phrase').innerHTML = maskedPhrase;
+        // Success - get random phrase
+        var json = JSON.parse(request.responseText),
+          random = Math.floor(Math.random() * json.length);
 
-  visibleLetters = getVisibleLetters(maskedPhrase);
+        correctPhrase = json[random].toUpperCase();
+        game(correctPhrase);
+      }
+    };
 
-  // Draw alphabet
-  var letters = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
+    request.open('GET', 'words.json', true);
+    request.send();
+  };
+
+  // Variables
+  var maskedPhrase = '',
+    visibleLetters = '',
+    letters = '',
+    singleLetters = '',
+    totalLives = '';
+
+  init();
+
+  var game = function(correctPhrase) {
+    maskedPhrase = maskLetters(correctPhrase);
+    visibleLetters = getVisibleLetters(maskedPhrase);
+
+    document.getElementById('phrase').innerHTML = maskedPhrase;
+
+    // Draw alphabet
+    letters = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase();
     lettersList = document.getElementById('letters');
 
-  for (var i = 0; i < letters.length; i++) {
-    var singleLetterLi = document.createElement('li');
+    for (var i = 0; i < letters.length; i++) {
+      var singleLetterLi = document.createElement('li');
 
-    singleLetterLi.innerHTML = letters.charAt(i);
-    lettersList.appendChild(singleLetterLi);
-  }
+      singleLetterLi.innerHTML = letters.charAt(i);
+      lettersList.appendChild(singleLetterLi);
+    }
 
-  // Handle the click on each letter
-  var singleLetters = lettersList.getElementsByTagName('li'),
-    totalLives = 5,
+    // Handle the click on each letter
+    singleLetters = lettersList.getElementsByTagName('li');
+
+    totalLives = 5;
     livesLeft = totalLives;
 
-  for (i = 0; i < singleLetters.length; i++) {
-    singleLetters[i].addEventListener('click', checkLetter, false);
-  }
+    for (i = 0; i < singleLetters.length; i++) {
+      singleLetters[i].addEventListener('click', checkLetter, false);
+    }
 
-  // Make sure every instance of uncovered letter is visible
-  for (i = 0; i < visibleLetters.length; i++) {
-    revealLetter(visibleLetters[i]);
-  }
+    // Make sure every instance of uncovered letter is visible
+    for (i = 0; i < visibleLetters.length; i++) {
+      revealLetter(visibleLetters[i]);
+    }
+  };
 
   /* FUNCTIONS */
 
