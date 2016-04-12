@@ -1,5 +1,3 @@
-
-
 // Run the game if all assets are loaded
 window.onload = function() {
 
@@ -8,7 +6,7 @@ window.onload = function() {
     var request = new XMLHttpRequest();
 
     request.onreadystatechange = function() {
-      if (request.readyState == 4 && request.status == 200) {
+      if (request.readyState === 4 && request.status === 200) {
 
         // Success - launch the game
         var json = JSON.parse(request.responseText),
@@ -76,7 +74,7 @@ window.onload = function() {
         letter = correctPhrase.charAt(random);
 
       // Mask a letter if it's not '_' or ' '
-      if (letter != '_' && letter != ' ') {
+      if (letter !== '_' && letter !== ' ') {
         maskedPhrase = maskedPhrase.replaceAt(random, '_');
         howManyLettersToMask--;
       } else {
@@ -94,7 +92,7 @@ window.onload = function() {
 
     for (var i = 0; i < phrase.length; i++) {
       // If you find '_' or ' ' or a duplicate letter - continue
-      if (phrase[i] == '_' || phrase[i] == ' ' || duplicateLetters.indexOf(phrase[i]) > -1) {
+      if (phrase[i] === '_' || phrase[i] === ' ' || duplicateLetters.indexOf(phrase[i]) > -1) {
         continue;
       } else {
         visibleLetters.push(phrase[i]);
@@ -112,7 +110,7 @@ window.onload = function() {
     for (var i = 0; i < correctPhrase.length; i++) {
 
       // Convert both characters to upper case, to compare it as case insensitive
-      if (correctPhrase.charAt(i).toUpperCase() == clickedLetter.toUpperCase()) {
+      if (correctPhrase.charAt(i).toUpperCase() === clickedLetter.toUpperCase()) {
         // Letter found
         revealLetter(clickedLetter);
         return;
@@ -132,7 +130,7 @@ window.onload = function() {
     // Reveal the letter (can be multiple letters)
     for (var i = 0; i < maskedPhrase.length; i++) {
 
-      if (correctPhrase.charAt(i).toUpperCase() == letterToReveal.toUpperCase()) {
+      if (correctPhrase.charAt(i).toUpperCase() === letterToReveal.toUpperCase()) {
         // To make sure the correct letter case is replaced,
         // get the letter from correct phrase, basing on index
         maskedPhrase = maskedPhrase.replaceAt(i, correctPhrase.charAt(i));
@@ -146,7 +144,7 @@ window.onload = function() {
     document.getElementById('phrase').innerHTML = maskedPhrase;
 
     // Check if user has won
-    isPhraseRevealed = (maskedPhrase.indexOf('_') == -1) ? true : false;
+    isPhraseRevealed = (maskedPhrase.indexOf('_') === -1) ? true : false;
 
     if (isPhraseRevealed) {
       finishGame('won');
