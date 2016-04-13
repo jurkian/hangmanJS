@@ -2,7 +2,8 @@
 
 	// Run the game if all assets are loaded
 	var init = function() {
-		var maskedPhrase = '',
+		var phrase = '',
+		maskedPhrase = '',
 		alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
 		letters = document.getElementById('alphabet'),
 		singleLetters = letters.getElementsByTagName('li'),
@@ -10,25 +11,8 @@
 		totalLives = 5,
 		livesLeft = totalLives;
 
-		// Get random phrase
-		var request = new XMLHttpRequest();
-		request.onreadystatechange = function() {
-
-			if (request.readyState === 4 && request.status === 200) {
-				// Success - launch the game
-				var json = JSON.parse(request.responseText),
-				random = Math.floor(Math.random() * json.length);
-
-				correctPhrase = json[random].toUpperCase();
-				game(correctPhrase);
-			}
-		};
-
-		request.open('GET', 'words.json', true);
-		request.send();
-
-		function game(correctPhrase) {
-			maskedPhrase = maskLetters(correctPhrase);
+		Game.start(function(phrase) {
+			maskedPhrase = maskLetters(phrase);
 			visibleLetters = getVisibleLetters(maskedPhrase);
 
 			// Draw randomly masked phrase
@@ -51,7 +35,7 @@
 			for (i = 0; i < visibleLetters.length; i++) {
 				revealLetter(visibleLetters[i]);
 			}
-		}
+		});
 
 		String.prototype.replaceAt = function(index, character) {
 			return this.substr(0, index) + character + this.substr(index + character.length);
