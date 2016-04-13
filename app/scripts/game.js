@@ -1,7 +1,15 @@
 var Game = (function () {
 	
 	// Settings
-	var _alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase();
+	var _alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
+			_phrase = '',
+			_phraseEl = document.getElementById('phrase'),
+			_maskedPhrase = '',
+			_visibleLetters = '',
+			_lettersEl = document.getElementById('alphabet'),
+			_singleLettersEl = _lettersEl.getElementsByTagName('li'),
+			_totalLives = 5,
+			_livesLeft = _totalLives;
 
 	// Start = get random phrase
 	var start = function(callback) {
@@ -12,10 +20,13 @@ var Game = (function () {
 				
 				// Phrases loaded - get 1 random and start the game
 				var json = JSON.parse(request.responseText),
-						random = Math.floor(Math.random() * json.length),
-						phrase = json[random].toUpperCase();
+						random = Math.floor(Math.random() * json.length);
 
-				callback(phrase);
+				_phrase = json[random].toUpperCase();
+				_maskedPhrase = maskPhrase(_phrase);
+				_visibleLetters = getVisibleLetters(_maskedPhrase);
+
+				callback(_phrase);
 			}
 		};
 
@@ -64,73 +75,133 @@ var Game = (function () {
 		return visibleLetters;
 	};
 	
+	// Draw masked phrase
+	var drawMaskedPhrase = function() {
+		_phraseEl.innerHTML = _maskedPhrase;
+	};
+	
 	// Draw alphabet on the chosen element
-	var drawAlphabet = function(whereToDraw) {
+	var drawAlphabet = function() {
 
 		for (var i = 0, len = _alphabet.length; i < len; i++) {
 			var singleLetterLi = document.createElement('li');
 
 			singleLetterLi.innerHTML = _alphabet.charAt(i);
-			whereToDraw.appendChild(singleLetterLi);
+			_lettersEl.appendChild(singleLetterLi);
 		}
 
 	};
 
+	// Handle letter clicks
+	var _handleSingleClick = function(event) {
+		var letter = event.target.textContent;
+		_checkLetter(letter);
+	};
+
+	var handleLetterClicks = function() {
+		for (i = 0; i < _singleLettersEl.length; i++) {
+			_singleLettersEl[i].addEventListener('click', _handleSingleClick, false);
+		}
+	};
+
+	// Uncover phrase parts on game start
+	var uncoverPhraseParts = function() {
+		for (i = 0; i < _visibleLetters.length; i++) {
+			_revealLetter(_visibleLetters[i], _phrase, _maskedPhrase);
+		}
+	};
+
 	// Check letter on click
-	var checkLetter = function(letter, phrase, callback) {
+	var _checkLetter = function(letter) {
 
 		// Check if the clicked letter is one of these hidden in the phrase
-		for (var i = 0, len = phrase.length; i < len; i++) {
+		for (var i = 0, len = _phrase.length; i < len; i++) {
 
 			// Convert both characters to upper case, to compare it as case insensitive
-			if (phrase.charAt(i).toUpperCase() === letter.toUpperCase()) {
+			if (_phrase.charAt(i).toUpperCase() === letter.toUpperCase()) {
 				// Letter found
-				callback();
+				_revealLetter(letter);
 				return;
 			}
 		}
 
 		// Letter not found
-		incorrectGuess();
+		_incorrectGuess();
 	};
 
 	// Reveal letter
-	var revealLetter = function(letterToReveal, maskedPhrase, correctPhrase, phraseEl) {
-
+	var _revealLetter = function(letterToReveal) {
 		// Reveal the letter (can be multiple letters)
-		for (var i = 0, len = maskedPhrase.length; i < len; i++) {
+		for (var i = 0, len = _maskedPhrase.length; i < len; i++) {
 
-			if (correctPhrase.charAt(i).toUpperCase() === letterToReveal.toUpperCase()) {
-				maskedPhrase = maskedPhrase.replaceAt(i, correctPhrase.charAt(i));
+			if (_phrase.charAt(i).toUpperCase() === letterToReveal.toUpperCase()) {
+				_maskedPhrase = _maskedPhrase.replaceAt(i, _phrase.charAt(i));
 			}
 		}
 
-		phraseEl.innerHTML = maskedPhrase;
+		_phraseEl.innerHTML = _maskedPhrase;
+		deactivateLetter(letterToReveal);
 
 		// Check if user has won
-		var isPhraseRevealed = (maskedPhrase.indexOf('_') === -1) ? true : false;
+		var isPhraseRevealed = (_maskedPhrase.indexOf('_') === -1) ? true : false;
 
 		if (isPhraseRevealed) {
-			finishGame('won');
+			_finishGame('won');
 		}
 	};
 
 	// Mark letter as active and deactivate click listener
-	var deactivateLetter = function(letter, singleLettersEl, listenerToRemove) {
+	var deactivateLetter = function(letter) {
 		var index = _alphabet.indexOf(letter);
 
-		singleLettersEl[index].classList.add('letter-active');
-		singleLettersEl[index].removeEventListener('click', listenerToRemove);
+		_singleLettersEl[index].classList.add('letter-active');
+		_singleLettersEl[index].removeEventListener('click', _handleSingleClick);
 	};
 
+	var _incorrectGuess = function() {
+		// Reduce lives and start showing the hangman
+		_livesLeft--;
+
+		var hangman = document.getElementById('hangman'),
+		opacityToAdd = 1 / _totalLives,
+		hangmanOpacity = hangman.style.opacity || 0;
+
+		hangman.style.opacity = parseFloat(hangmanOpacity) + parseFloat(opacityToAdd);
+
+		// If no more lives left -> game over
+		if (_livesLeft === 0) {
+			_finishGame('lost');
+		}
+	};
+
+	var _finishGame = function(status) {
+		// Disable click on letters and show message
+		for (var i = 0; i < _singleLettersEl.length; i++) {
+			_singleLettersEl[i].removeEventListener('click', _handleSingleClick);
+		}
+
+		switch (status) {
+		case 'won':
+			alert('Congratulations, you won! Now you can refresh and try again.');
+			break;
+
+		case 'lost':
+			alert('Ooops... You\'ve just lost a game. Please refresh and try again!');
+			break;
+
+		default:
+			alert('Please refresh and try again!');
+			break;
+		}
+	};
+
+	// Public returns
 	return {
 	  start: start,
-	  maskPhrase: maskPhrase,
-	  getVisibleLetters: getVisibleLetters,
+	  drawMaskedPhrase: drawMaskedPhrase,
 	  drawAlphabet: drawAlphabet,
-	  checkLetter: checkLetter,
-	  revealLetter: revealLetter,
-	  deactivateLetter: deactivateLetter
+	  handleLetterClicks: handleLetterClicks,
+	  uncoverPhraseParts: uncoverPhraseParts
 	};
 
 })();
