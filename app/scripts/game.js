@@ -1,5 +1,7 @@
 var Game = (function () {
 	
+	var _alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase();
+
 	// Start = get random phrase
 	var start = function(callback) {
 		var request = new XMLHttpRequest();
@@ -61,10 +63,46 @@ var Game = (function () {
 		return visibleLetters;
 	};
 	
+	// Draw alphabet into chosen element
+	var drawAlphabet = function(whereToDraw) {
+
+		for (var i = 0, len = _alphabet.length; i < len; i++) {
+			var singleLetterLi = document.createElement('li');
+
+			singleLetterLi.innerHTML = _alphabet.charAt(i);
+			whereToDraw.appendChild(singleLetterLi);
+		}
+
+	};
+
+	// Check letter on click
+	var checkLetter = function(letter, phrase) {
+
+		// Check if the clicked letter is one of these hidden in the phrase
+		for (var i = 0, len = phrase.length; i < len; i++) {
+
+			// Convert both characters to upper case, to compare it as case insensitive
+			if (phrase.charAt(i).toUpperCase() === letter.toUpperCase()) {
+				// Letter found
+				revealLetter(letter);
+				return;
+			}
+		}
+
+		// Deactivate the clicked letter - you can use it only once
+		var deactivateIndex = _alphabet.indexOf(letter);
+		deactivateLetter(deactivateIndex);
+
+		// Letter not found
+		incorrectGuess();
+	};
+
 	return {
 	  start: start,
 	  maskPhrase: maskPhrase,
-	  getVisibleLetters: getVisibleLetters
+	  getVisibleLetters: getVisibleLetters,
+	  drawAlphabet: drawAlphabet,
+	  checkLetter: checkLetter
 	};
 
 })();

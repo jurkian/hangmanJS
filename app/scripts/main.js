@@ -10,7 +10,8 @@
 				singleLettersEl = lettersEl.getElementsByTagName('li'),
 				visibleLetters = '',
 				totalLives = 5,
-				livesLeft = totalLives;
+				livesLeft = totalLives,
+				i;
 
 		Game.start(function(phrase) {
 			maskedPhrase = Game.maskPhrase(phrase);
@@ -20,16 +21,16 @@
 			phraseEl.innerHTML = maskedPhrase;
 
 			// Draw alphabet
-			for (var i = 0; i < alphabet.length; i++) {
-				var singleLetterLi = document.createElement('li');
-
-				singleLetterLi.innerHTML = alphabet.charAt(i);
-				lettersEl.appendChild(singleLetterLi);
-			}
+			Game.drawAlphabet(lettersEl);
 
 			// Handle the click on each letter
+			var handleLetterClick = function(event) {
+				var letter = event.target.textContent;
+				Game.checkLetter(letter, phrase);
+			};
+
 			for (i = 0; i < singleLettersEl.length; i++) {
-				singleLettersEl[i].addEventListener('click', checkLetter, false);
+				singleLettersEl[i].addEventListener('click', handleLetterClick, false);
 			}
 
 			// Make sure every instance of uncovered letter is visible
@@ -41,28 +42,6 @@
 		String.prototype.replaceAt = function(index, character) {
 			return this.substr(0, index) + character + this.substr(index + character.length);
 		};
-
-		function checkLetter() {
-			var clickedLetter = this.innerHTML;
-
-			// Check if the clicked letter is one of these hidden in the phrase
-			for (var i = 0; i < correctPhrase.length; i++) {
-
-				// Convert both characters to upper case, to compare it as case insensitive
-				if (correctPhrase.charAt(i).toUpperCase() === clickedLetter.toUpperCase()) {
-					// Letter found
-					revealLetter(clickedLetter);
-					return;
-				}
-			}
-
-			// You can use every letter only once
-			var deactivateIndex = alphabet.indexOf(clickedLetter);
-			deactivateLetter(deactivateIndex);
-
-			// Letter not found
-			incorrectGuess();
-		}
 
 		function revealLetter(letterToReveal) {
 
