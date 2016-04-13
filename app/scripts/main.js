@@ -3,32 +3,33 @@
 	// Run the game if all assets are loaded
 	var init = function() {
 		var phrase = '',
-		maskedPhrase = '',
-		alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
-		letters = document.getElementById('alphabet'),
-		singleLetters = letters.getElementsByTagName('li'),
-		visibleLetters = '',
-		totalLives = 5,
-		livesLeft = totalLives;
+				phraseEl = document.getElementById('phrase'),
+				maskedPhrase = '',
+				alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
+				lettersEl = document.getElementById('alphabet'),
+				singleLettersEl = lettersEl.getElementsByTagName('li'),
+				visibleLetters = '',
+				totalLives = 5,
+				livesLeft = totalLives;
 
 		Game.start(function(phrase) {
-			maskedPhrase = maskLetters(phrase);
-			visibleLetters = getVisibleLetters(maskedPhrase);
+			maskedPhrase = Game.maskPhrase(phrase);
+			visibleLetters = Game.getVisibleLetters(maskedPhrase);
 
-			// Draw randomly masked phrase
-			document.getElementById('phrase').innerHTML = maskedPhrase;
+			// Draw masked phrase
+			phraseEl.innerHTML = maskedPhrase;
 
 			// Draw alphabet
 			for (var i = 0; i < alphabet.length; i++) {
 				var singleLetterLi = document.createElement('li');
 
 				singleLetterLi.innerHTML = alphabet.charAt(i);
-				letters.appendChild(singleLetterLi);
+				lettersEl.appendChild(singleLetterLi);
 			}
 
 			// Handle the click on each letter
-			for (i = 0; i < singleLetters.length; i++) {
-				singleLetters[i].addEventListener('click', checkLetter, false);
+			for (i = 0; i < singleLettersEl.length; i++) {
+				singleLettersEl[i].addEventListener('click', checkLetter, false);
 			}
 
 			// Make sure every instance of uncovered letter is visible
@@ -40,45 +41,6 @@
 		String.prototype.replaceAt = function(index, character) {
 			return this.substr(0, index) + character + this.substr(index + character.length);
 		};
-
-		function maskLetters(correctPhrase) {
-			// Mask 85% of the given correctPhrase
-			var howManyLettersToMask = Math.floor(correctPhrase.length * 0.85),
-			maskedPhrase = correctPhrase;
-
-			while (howManyLettersToMask > 0) {
-				var random = Math.floor(Math.random() * correctPhrase.length),
-				letter = correctPhrase.charAt(random);
-
-				// Mask a letter if it's not '_' or ' '
-				if (letter !== '_' && letter !== ' ') {
-					maskedPhrase = maskedPhrase.replaceAt(random, '_');
-					howManyLettersToMask--;
-				} else {
-					continue;
-				}
-			}
-
-			return maskedPhrase;
-		}
-
-		function getVisibleLetters(maskedPhrase) {
-			var duplicateLetters = [],
-			phrase = maskedPhrase.split(''),
-			visibleLetters = [];
-
-			for (var i = 0; i < phrase.length; i++) {
-				// If you find '_' or ' ' or a duplicate letter - continue
-				if (phrase[i] === '_' || phrase[i] === ' ' || duplicateLetters.indexOf(phrase[i]) > -1) {
-					continue;
-				} else {
-					visibleLetters.push(phrase[i]);
-					duplicateLetters.push(phrase[i]);
-				}
-			}
-
-			return visibleLetters;
-		}
 
 		function checkLetter() {
 			var clickedLetter = this.innerHTML;
@@ -129,8 +91,8 @@
 		}
 
 		function deactivateLetter(index) {
-			singleLetters[index].className += ' letter-active';
-			singleLetters[index].removeEventListener('click', checkLetter);
+			singleLettersEl[index].className += ' letter-active';
+			singleLettersEl[index].removeEventListener('click', checkLetter);
 		}
 
 		function incorrectGuess() {
@@ -151,8 +113,8 @@
 
 		function finishGame(status) {
 			// Disable click on letters and show message
-			for (var i = 0; i < singleLetters.length; i++) {
-				singleLetters[i].removeEventListener('click', checkLetter);
+			for (var i = 0; i < singleLettersEl.length; i++) {
+				singleLettersEl[i].removeEventListener('click', checkLetter);
 			}
 
 			switch (status) {
