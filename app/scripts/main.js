@@ -5,7 +5,6 @@
 		var phrase = '',
 				phraseEl = document.getElementById('phrase'),
 				maskedPhrase = '',
-				alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
 				lettersEl = document.getElementById('alphabet'),
 				singleLettersEl = lettersEl.getElementsByTagName('li'),
 				visibleLetters = '',
@@ -26,7 +25,11 @@
 			// Handle the click on each letter
 			var handleLetterClick = function(event) {
 				var letter = event.target.textContent;
-				Game.checkLetter(letter, phrase);
+				Game.checkLetter(letter, phrase, function() {
+					// Letter found
+					Game.revealLetter(letter, maskedPhrase, phrase, phraseEl);
+					Game.deactivateLetter(letter, singleLettersEl, handleLetterClick);
+				});
 			};
 
 			for (i = 0; i < singleLettersEl.length; i++) {
@@ -35,44 +38,14 @@
 
 			// Make sure every instance of uncovered letter is visible
 			for (i = 0; i < visibleLetters.length; i++) {
-				revealLetter(visibleLetters[i]);
+				Game.revealLetter(visibleLetters[i], maskedPhrase, phrase, phraseEl);
+				Game.deactivateLetter(visibleLetters[i], singleLettersEl, handleLetterClick);
 			}
 		});
 
 		String.prototype.replaceAt = function(index, character) {
 			return this.substr(0, index) + character + this.substr(index + character.length);
 		};
-
-		function revealLetter(letterToReveal) {
-
-			// Reveal the letter (can be multiple letters)
-			for (var i = 0; i < maskedPhrase.length; i++) {
-
-				if (correctPhrase.charAt(i).toUpperCase() === letterToReveal.toUpperCase()) {
-					// To make sure the correct letter case is replaced,
-					// get the letter from correct phrase, basing on index
-					maskedPhrase = maskedPhrase.replaceAt(i, correctPhrase.charAt(i));
-
-					// Show every uncovered letter as active on the alphabet and deactivate click event
-					var indexLetterToReveal = alphabet.indexOf(letterToReveal);
-					deactivateLetter(indexLetterToReveal);
-				}
-			}
-
-			document.getElementById('phrase').innerHTML = maskedPhrase;
-
-			// Check if user has won
-			isPhraseRevealed = (maskedPhrase.indexOf('_') === -1) ? true : false;
-
-			if (isPhraseRevealed) {
-				finishGame('won');
-			}
-		}
-
-		function deactivateLetter(index) {
-			singleLettersEl[index].className += ' letter-active';
-			singleLettersEl[index].removeEventListener('click', checkLetter);
-		}
 
 		function incorrectGuess() {
 			// Reduce lives and start showing the hangman

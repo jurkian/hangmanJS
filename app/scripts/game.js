@@ -1,5 +1,6 @@
 var Game = (function () {
 	
+	// Settings
 	var _alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase();
 
 	// Start = get random phrase
@@ -63,7 +64,7 @@ var Game = (function () {
 		return visibleLetters;
 	};
 	
-	// Draw alphabet into chosen element
+	// Draw alphabet on the chosen element
 	var drawAlphabet = function(whereToDraw) {
 
 		for (var i = 0, len = _alphabet.length; i < len; i++) {
@@ -76,7 +77,7 @@ var Game = (function () {
 	};
 
 	// Check letter on click
-	var checkLetter = function(letter, phrase) {
+	var checkLetter = function(letter, phrase, callback) {
 
 		// Check if the clicked letter is one of these hidden in the phrase
 		for (var i = 0, len = phrase.length; i < len; i++) {
@@ -84,17 +85,42 @@ var Game = (function () {
 			// Convert both characters to upper case, to compare it as case insensitive
 			if (phrase.charAt(i).toUpperCase() === letter.toUpperCase()) {
 				// Letter found
-				revealLetter(letter);
+				callback();
 				return;
 			}
 		}
 
-		// Deactivate the clicked letter - you can use it only once
-		var deactivateIndex = _alphabet.indexOf(letter);
-		deactivateLetter(deactivateIndex);
-
 		// Letter not found
 		incorrectGuess();
+	};
+
+	// Reveal letter
+	var revealLetter = function(letterToReveal, maskedPhrase, correctPhrase, phraseEl) {
+
+		// Reveal the letter (can be multiple letters)
+		for (var i = 0, len = maskedPhrase.length; i < len; i++) {
+
+			if (correctPhrase.charAt(i).toUpperCase() === letterToReveal.toUpperCase()) {
+				maskedPhrase = maskedPhrase.replaceAt(i, correctPhrase.charAt(i));
+			}
+		}
+
+		phraseEl.innerHTML = maskedPhrase;
+
+		// Check if user has won
+		var isPhraseRevealed = (maskedPhrase.indexOf('_') === -1) ? true : false;
+
+		if (isPhraseRevealed) {
+			finishGame('won');
+		}
+	};
+
+	// Mark letter as active and deactivate click listener
+	var deactivateLetter = function(letter, singleLettersEl, listenerToRemove) {
+		var index = _alphabet.indexOf(letter);
+
+		singleLettersEl[index].classList.add('letter-active');
+		singleLettersEl[index].removeEventListener('click', listenerToRemove);
 	};
 
 	return {
@@ -102,7 +128,9 @@ var Game = (function () {
 	  maskPhrase: maskPhrase,
 	  getVisibleLetters: getVisibleLetters,
 	  drawAlphabet: drawAlphabet,
-	  checkLetter: checkLetter
+	  checkLetter: checkLetter,
+	  revealLetter: revealLetter,
+	  deactivateLetter: deactivateLetter
 	};
 
 })();
