@@ -61,7 +61,7 @@ var Game = (function () {
 		var phrase = maskedPhrase.split(''),
 				visibleLetters = [];
 
-		for (var i = 0; i < phrase.length; i++) {
+		for (var i = 0, len = phrase.length; i < len; i++) {
 			
 			// If you find '_' or ' ' or a duplicate letter - continue
 			if (phrase[i] === '_' || phrase[i] === ' ' || visibleLetters.indexOf(phrase[i]) > -1) {
@@ -99,15 +99,15 @@ var Game = (function () {
 	};
 
 	var handleLetterClicks = function() {
-		for (i = 0; i < _singleLettersEl.length; i++) {
+		for (var i = 0, len = _singleLettersEl.length; i < len; i++) {
 			_singleLettersEl[i].addEventListener('click', _handleSingleClick, false);
 		}
 	};
 
 	// Uncover phrase parts on game start
 	var uncoverPhraseParts = function() {
-		for (i = 0; i < _visibleLetters.length; i++) {
-			_revealLetter(_visibleLetters[i], _phrase, _maskedPhrase);
+		for (var i = 0, len = _visibleLetters.length; i < len; i++) {
+			_revealLetter(_visibleLetters[i]);
 		}
 	};
 
@@ -176,7 +176,7 @@ var Game = (function () {
 
 	var _finishGame = function(status) {
 		// Disable click on letters and show message
-		for (var i = 0; i < _singleLettersEl.length; i++) {
+		for (var i = 0, len = _singleLettersEl.length; i < len; i++) {
 			_singleLettersEl[i].removeEventListener('click', _handleSingleClick);
 		}
 
