@@ -26,7 +26,9 @@ var Game = (function () {
 				_maskedPhrase = maskPhrase(_phrase);
 				_visibleLetters = getVisibleLetters(_maskedPhrase);
 
-				callback(_phrase);
+				if (typeof callback === 'function') {
+					callback(_phrase);
+				}
 			}
 		};
 
