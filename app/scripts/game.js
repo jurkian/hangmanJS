@@ -149,13 +149,15 @@ var Game = (function () {
 	// Check if letter is correct - on click
 	var _checkLetter = function(letter) {
 
+		// Whether the user guessed or not, make sure the letter can't be clicked again
+		_revealLetter(letter);
+
 		// Check if the clicked letter is one of these hidden in the phrase
 		for (var i = 0, len = _phrase.length; i < len; i++) {
 
 			// Convert both characters to upper case, to compare it as case insensitive
 			if (_phrase.charAt(i).toUpperCase() === letter.toUpperCase()) {
 				// Letter found
-				_revealLetter(letter);
 				return;
 			}
 		}
