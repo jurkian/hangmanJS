@@ -9,29 +9,17 @@ var Game = (function () {
 			_lettersEl = document.getElementById('alphabet'),
 			_singleLettersEl = _lettersEl.getElementsByTagName('li'),
 			_totalLives = 5,
-			_livesLeft = _totalLives;
+			_livesLeft = _totalLives,
+			_isNewGame = false;
 
 	// Start = get random phrase
 	var start = function(callback) {
-		_getPhrase(_handleGameStart);
+		
+		_handleGameStart();
 
 		if (typeof callback === 'function') {
 			callback();
 		}
-	};
-
-	var _handleGameStart = function() {
-		// Draw masked phrase
-		_drawMaskedPhrase();
-
-		// Draw alphabet
-		_drawAlphabet();
-
-		// Handle the click on each letter
-		_handleLetterClicks();
-
-		// Show every uncovered letter on the alphabet board
-		_uncoverPhraseParts();
 	};
 
 	var _getPhrase = function(callback) {
@@ -56,6 +44,29 @@ var Game = (function () {
 
 		request.open('GET', 'words.json', true);
 		request.send();
+	};
+
+	var _handleGameStart = function() {
+		
+		// When you have a phrase...
+		_getPhrase(function() {
+
+			// Draw the alphabet only once
+			if (_isNewGame === false) {
+				// Draw alphabet
+				_drawAlphabet();
+			}
+
+			// Handle the click on each letter
+			_handleLetterClicks();
+
+			// Draw masked new phrase
+			_drawMaskedPhrase();
+		
+			// Show every uncovered letter on the alphabet board
+			_uncoverPhraseParts();
+		});
+
 	};
 
 	// Mask 85% of the given phrase
@@ -135,7 +146,7 @@ var Game = (function () {
 		}
 	};
 
-	// Check letter on click
+	// Check if letter is correct - on click
 	var _checkLetter = function(letter) {
 
 		// Check if the clicked letter is one of these hidden in the phrase
@@ -153,11 +164,10 @@ var Game = (function () {
 		_incorrectGuess();
 	};
 
-	// Reveal letter
+	// Reveal the letter (can be multiple letters)
 	var _revealLetter = function(letterToReveal) {
-		// Reveal the letter (can be multiple letters)
-		for (var i = 0, len = _maskedPhrase.length; i < len; i++) {
 
+		for (var i = 0, len = _maskedPhrase.length; i < len; i++) {
 			if (_phrase.charAt(i).toUpperCase() === letterToReveal.toUpperCase()) {
 				_maskedPhrase = _maskedPhrase.replaceAt(i, _phrase.charAt(i));
 			}
@@ -198,25 +208,44 @@ var Game = (function () {
 		}
 	};
 
-	var _finishGame = function(status) {
-		// Disable click on letters and show message
+	// Reset game so it can be played once again
+	var _resetGame = function() {
+		// Reset lives
+		_livesLeft = _totalLives;
+
+		// Restore hangman's original opacity
+		var hangman = document.getElementById('hangman');
+		hangman.style.opacity = 0;
+		
+		// Reset alphabet letters
 		for (var i = 0, len = _singleLettersEl.length; i < len; i++) {
-			_singleLettersEl[i].removeEventListener('click', _handleSingleClick);
+			_singleLettersEl[i].classList.remove('letter-active');
 		}
 
+		// Mark it as new game
+		_isNewGame = true;
+	};
+
+	var _finishGame = function(status) {
+		
+		// Show message
 		switch (status) {
 		case 'won':
-			alert('Congratulations, you won! Now you can refresh and try again.');
+			alert('Congratulations, you won! Now you can play again.');
 			break;
 
 		case 'lost':
-			alert('Ooops... You\'ve just lost a game. Please refresh and try again!');
+			alert('Ooops... You\'ve just lost a game. Please try again :)');
 			break;
 
 		default:
 			alert('Please refresh and try again!');
 			break;
 		}
+
+		// Start a new game
+		_resetGame();
+		_handleGameStart();
 	};
 
 	// Public returns
