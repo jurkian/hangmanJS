@@ -23,8 +23,20 @@ var Game = (function () {
 						random = Math.floor(Math.random() * json.length);
 
 				_phrase = json[random].toUpperCase();
-				_maskedPhrase = maskPhrase(_phrase);
-				_visibleLetters = getVisibleLetters(_maskedPhrase);
+				_maskedPhrase = _maskPhrase(_phrase);
+				_visibleLetters = _getVisibleLetters(_maskedPhrase);
+
+				// Draw masked phrase
+				_drawMaskedPhrase();
+
+				// Draw alphabet
+				_drawAlphabet();
+
+				// Handle the click on each letter
+				_handleLetterClicks();
+
+				// Show every uncovered letter on the alphabet board
+				_uncoverPhraseParts();
 
 				if (typeof callback === 'function') {
 					callback(_phrase);
@@ -37,7 +49,7 @@ var Game = (function () {
 	};
 
 	// Mask 85% of the given phrase
-	var maskPhrase = function(phrase) {
+	var _maskPhrase = function(phrase) {
 
 		var howManyLettersToMask = Math.floor(phrase.length * 0.85),
 				maskedPhrase = phrase;
@@ -59,7 +71,7 @@ var Game = (function () {
 	};
 
 	// Get visible letters of a masked phrase
-	var getVisibleLetters = function(maskedPhrase) {
+	var _getVisibleLetters = function(maskedPhrase) {
 		var phrase = maskedPhrase.split(''),
 				visibleLetters = [];
 
@@ -78,12 +90,12 @@ var Game = (function () {
 	};
 	
 	// Draw masked phrase
-	var drawMaskedPhrase = function() {
+	var _drawMaskedPhrase = function() {
 		_phraseEl.innerHTML = _maskedPhrase;
 	};
 	
 	// Draw alphabet on the chosen element
-	var drawAlphabet = function() {
+	var _drawAlphabet = function() {
 
 		for (var i = 0, len = _alphabet.length; i < len; i++) {
 			var singleLetterLi = document.createElement('li');
@@ -100,14 +112,14 @@ var Game = (function () {
 		_checkLetter(letter);
 	};
 
-	var handleLetterClicks = function() {
+	var _handleLetterClicks = function() {
 		for (var i = 0, len = _singleLettersEl.length; i < len; i++) {
 			_singleLettersEl[i].addEventListener('click', _handleSingleClick, false);
 		}
 	};
 
 	// Uncover phrase parts on game start
-	var uncoverPhraseParts = function() {
+	var _uncoverPhraseParts = function() {
 		for (var i = 0, len = _visibleLetters.length; i < len; i++) {
 			_revealLetter(_visibleLetters[i]);
 		}
@@ -142,7 +154,7 @@ var Game = (function () {
 		}
 
 		_phraseEl.innerHTML = _maskedPhrase;
-		deactivateLetter(letterToReveal);
+		_deactivateLetter(letterToReveal);
 
 		// Check if user has won
 		var isPhraseRevealed = (_maskedPhrase.indexOf('_') === -1) ? true : false;
@@ -153,7 +165,7 @@ var Game = (function () {
 	};
 
 	// Mark letter as active and deactivate click listener
-	var deactivateLetter = function(letter) {
+	var _deactivateLetter = function(letter) {
 		var index = _alphabet.indexOf(letter);
 
 		_singleLettersEl[index].classList.add('letter-active');
@@ -165,8 +177,8 @@ var Game = (function () {
 		_livesLeft--;
 
 		var hangman = document.getElementById('hangman'),
-		opacityToAdd = 1 / _totalLives,
-		hangmanOpacity = hangman.style.opacity || 0;
+				opacityToAdd = 1 / _totalLives,
+				hangmanOpacity = hangman.style.opacity || 0;
 
 		hangman.style.opacity = parseFloat(hangmanOpacity) + parseFloat(opacityToAdd);
 
@@ -199,11 +211,7 @@ var Game = (function () {
 
 	// Public returns
 	return {
-	  start: start,
-	  drawMaskedPhrase: drawMaskedPhrase,
-	  drawAlphabet: drawAlphabet,
-	  handleLetterClicks: handleLetterClicks,
-	  uncoverPhraseParts: uncoverPhraseParts
+	  start: start
 	};
 
 })();
