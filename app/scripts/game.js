@@ -13,12 +13,34 @@ var Game = (function () {
 
 	// Start = get random phrase
 	var start = function(callback) {
+		_getPhrase(_handleGameStart);
+
+		if (typeof callback === 'function') {
+			callback();
+		}
+	};
+
+	var _handleGameStart = function() {
+		// Draw masked phrase
+		_drawMaskedPhrase();
+
+		// Draw alphabet
+		_drawAlphabet();
+
+		// Handle the click on each letter
+		_handleLetterClicks();
+
+		// Show every uncovered letter on the alphabet board
+		_uncoverPhraseParts();
+	};
+
+	var _getPhrase = function(callback) {
 		var request = new XMLHttpRequest();
 
 		request.onreadystatechange = function() {
 			if (request.readyState === 4 && request.status === 200) {
 				
-				// Phrases loaded - get 1 random and start the game
+				// Phrases loaded - get 1 random phrase
 				var json = JSON.parse(request.responseText),
 						random = Math.floor(Math.random() * json.length);
 
@@ -26,20 +48,8 @@ var Game = (function () {
 				_maskedPhrase = _maskPhrase(_phrase);
 				_visibleLetters = _getVisibleLetters(_maskedPhrase);
 
-				// Draw masked phrase
-				_drawMaskedPhrase();
-
-				// Draw alphabet
-				_drawAlphabet();
-
-				// Handle the click on each letter
-				_handleLetterClicks();
-
-				// Show every uncovered letter on the alphabet board
-				_uncoverPhraseParts();
-
 				if (typeof callback === 'function') {
-					callback(_phrase);
+					callback();
 				}
 			}
 		};
