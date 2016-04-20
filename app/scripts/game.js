@@ -153,13 +153,9 @@ var Game = (function () {
 		_revealLetter(letter);
 
 		// Check if the clicked letter is one of these hidden in the phrase
-		for (var i = 0, len = _phrase.length; i < len; i++) {
-
-			// Convert both characters to upper case, to compare it as case insensitive
-			if (_phrase.charAt(i).toUpperCase() === letter.toUpperCase()) {
-				// Letter found
-				return;
-			}
+		if (_phrase.indexOf(letter.toUpperCase()) > -1) {
+			// Letter found
+			return;
 		}
 
 		// Letter not found
