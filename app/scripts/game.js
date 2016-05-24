@@ -193,6 +193,7 @@ var Game = (function () {
 	var _incorrectGuess = function() {
 		// Reduce lives and start showing the hangman
 		_livesLeft--;
+		StatusBar.updateLives(_livesLeft);
 
 		var hangman = document.getElementById('hangman'),
 				opacityToAdd = 1 / _totalLives,
@@ -210,6 +211,7 @@ var Game = (function () {
 	var _resetGame = function() {
 		// Reset lives
 		_livesLeft = _totalLives;
+		StatusBar.updateLives(_livesLeft);
 
 		// Restore hangman's original opacity
 		var hangman = document.getElementById('hangman');
