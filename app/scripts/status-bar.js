@@ -4,8 +4,10 @@ var StatusBar = (function () {
 	var _statusBarEl = document.getElementById('game-info-bar'),
 			_pointsElName = '.game-info-points',
 			_livesElName = '.game-info-lives',
+			_resetPointsName = '.reset-points',
 			_pointsEl = _statusBarEl.querySelector(_pointsElName),
-			_livesEl = _statusBarEl.querySelector(_livesElName);
+			_livesEl = _statusBarEl.querySelector(_livesElName),
+			_resetPointsEl = _statusBarEl.querySelector(_resetPointsName);
 
 	// Add x points to current score
 	// Minimum score is 0, we don't need negative values
@@ -43,8 +45,19 @@ var StatusBar = (function () {
 		_pointsEl.textContent = getCurrentScore();
 	};
 
+	var init = function(lives) {
+		drawCurrentScore();
+		drawLives(lives);
+
+		_resetPointsEl.addEventListener('click', function() {
+			resetPoints();
+			drawCurrentScore();
+		}, false);
+	};
+
 	// Public returns
 	return {
+		init: init,
 	  updatePoints: updatePoints,
 	  getCurrentScore: getCurrentScore,
 	  drawCurrentScore: drawCurrentScore,

@@ -48,12 +48,11 @@ var Game = (function () {
 
 	var _handleGameStart = function() {
 		
+		// Initialize status bar
+		StatusBar.init(_totalLives);
+		
 		// When you have a phrase...
 		_getPhrase(function() {
-
-			// Update status bar
-			StatusBar.drawCurrentScore();
-			StatusBar.drawLives(_totalLives);			
 
 			// Draw the alphabet only once
 			if (_isNewGame === false) {
