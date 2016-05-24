@@ -113,7 +113,7 @@ module.exports = function(grunt) {
     uncss: {
       dist: {
         options: {
-          ignore: ['ul#alphabet li', 'ul#alphabet li.letter-active']
+          ignore: ['#alphabet li', '#alphabet li.letter-active']
         },
         files: {
           '<%= config.dist %>/styles/main.css': ['<%= config.dist %>/*.html']
