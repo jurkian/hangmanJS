@@ -51,6 +51,10 @@ var Game = (function () {
 		// When you have a phrase...
 		_getPhrase(function() {
 
+			// Update status bar
+			StatusBar.drawCurrentScore();
+			StatusBar.drawLives(_totalLives);			
+
 			// Draw the alphabet only once
 			if (_isNewGame === false) {
 				// Draw alphabet
@@ -193,7 +197,7 @@ var Game = (function () {
 	var _incorrectGuess = function() {
 		// Reduce lives and start showing the hangman
 		_livesLeft--;
-		StatusBar.updateLives(_livesLeft);
+		StatusBar.drawLives(_livesLeft);
 
 		var hangman = document.getElementById('hangman'),
 				opacityToAdd = 1 / _totalLives,
@@ -211,7 +215,7 @@ var Game = (function () {
 	var _resetGame = function() {
 		// Reset lives
 		_livesLeft = _totalLives;
-		StatusBar.updateLives(_livesLeft);
+		StatusBar.drawLives(_livesLeft);
 
 		// Restore hangman's original opacity
 		var hangman = document.getElementById('hangman');
@@ -232,10 +236,12 @@ var Game = (function () {
 		switch (status) {
 		case 'won':
 			alert('Congratulations, you won! Now you can play again.');
+			StatusBar.updatePoints(1);
 			break;
 
 		case 'lost':
 			alert('Ooops... You\'ve just lost a game. Please try again :)');
+			StatusBar.updatePoints(-1);
 			break;
 
 		default:
