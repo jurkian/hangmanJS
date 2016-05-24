@@ -18,6 +18,7 @@
 		<b>Points: </b><span class="game-info-points"></span> <small class="reset-points">(reset)</small>, 
 		<b>lives left: </b><span class="game-info-lives"></span>
 	</div>
+	
 	<section id="game" class="container">
 		<div class="row">
 			<div class="gallows-container col-lg-4 col-md-4 col-sm-5 col-lg-offset-2 col-md-offset-1">
@@ -32,10 +33,18 @@
 		</div>
 	</section>
 
+	<div class="popup-overlay">
+		<div class="popup">
+			<h3>Congratulations, you've won!</h3>
+			<button class="btn btn-primary">Play again</button>
+		</div>
+	</div>
+
 	<!-- build:js scripts/scripts.min.js -->
 	<script src="scripts/helpers.js"></script>
-	<script src="scripts/game.js"></script>
 	<script src="scripts/status-bar.js"></script>
+	<script src="scripts/popup.js"></script>
+	<script src="scripts/game.js"></script>
 	<script src="scripts/main.js"></script>
 	<!-- /build -->
 </body>

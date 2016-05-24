@@ -50,7 +50,10 @@ var Game = (function () {
 		
 		// Initialize status bar
 		StatusBar.init(_totalLives);
-		
+
+		// Initialize popup
+		Popup.init();
+
 		// When you have a phrase...
 		_getPhrase(function() {
 
@@ -234,12 +237,12 @@ var Game = (function () {
 		// Show message
 		switch (status) {
 		case 'won':
-			alert('Congratulations, you won! Now you can play again.');
+			Popup.showWin();
 			StatusBar.updatePoints(1);
 			break;
 
 		case 'lost':
-			alert('Ooops... You\'ve just lost a game. Please try again :)');
+			Popup.showLose();
 			StatusBar.updatePoints(-1);
 			break;
 
