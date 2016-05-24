@@ -2,40 +2,40 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <title>HangmanJS</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	<meta charset="utf-8">
+	<title>HangmanJS</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="styles/main.css">
+	<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="styles/main.css">
 </head>
 
 <body>
-  <div class="game-info-bar">
-    <b>Points: </b><span>3</span>, <b>lives left: </b><span>5</span> 
-  </div>
-  <section id="game" class="container">
-    <div class="row">
-      <div class="gallows-container col-lg-4 col-md-4 col-sm-5 col-lg-offset-2 col-md-offset-1">
-        <div class="gallows">
-          <div id="hangman"></div>
-        </div>
-      </div>
-      <div class="alphabet-container col-lg-4 col-md-5 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1">
-        <div id="phrase"></div>
-        <ul id="alphabet"></ul>
-      </div>
-    </div>
-  </section>
+	<div class="game-info-bar">
+		<b>Points: </b><span>3</span>, <b>lives left: </b><span>5</span> 
+	</div>
+	<section id="game" class="container">
+		<div class="row">
+			<div class="gallows-container col-lg-4 col-md-4 col-sm-5 col-lg-offset-2 col-md-offset-1">
+				<div class="gallows">
+					<div id="hangman"></div>
+				</div>
+			</div>
+			<div class="alphabet-container col-lg-4 col-md-5 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1">
+				<div id="phrase"></div>
+				<ul id="alphabet"></ul>
+			</div>
+		</div>
+	</section>
 
-  <!-- build:js scripts/scripts.min.js -->
-  <script src="scripts/helpers.js"></script>
-  <script src="scripts/game.js"></script>
-  <script src="scripts/main.js"></script>
-  <!-- /build -->
+	<!-- build:js scripts/scripts.min.js -->
+	<script src="scripts/helpers.js"></script>
+	<script src="scripts/game.js"></script>
+	<script src="scripts/main.js"></script>
+	<!-- /build -->
 </body>
 
 </html>
