@@ -1,44 +1,60 @@
 var Popup = (function () {
 	
-	// Settings
-	var _popupOverlayEl = document.querySelector('.popup-overlay'),
-			_popupEl = document.querySelector('.popup'),
-			_popupBtn = _popupEl.querySelector('button'),
-			_gameWonText = "Congratulations, you've won!",
-			_gameLostText = "Oops... You've just lost a game";
+	// Default settings
+	var s = {
+		popupOverlayEl: document.querySelector('.popup-overlay'),
+		popupEl: document.querySelector('.popup'),
+		gameWonText: "Congratulations, you've won!",
+		gameLostText: "Oops... You've just lost a game",
+		openedClass: 'opened'
+	};
+
+	// Local variables
+	var popupBtn = '';
 
 	var show = function() {
-		_popupOverlayEl.classList.add('opened');
-		_popupEl.classList.add('opened');
+		s.popupOverlayEl.classList.add(s.openedClass);
+		s.popupEl.classList.add(s.openedClass);
 	};
 
 	var close = function() {
-		_popupOverlayEl.classList.remove('opened');
-		_popupEl.classList.remove('opened');
+		s.popupOverlayEl.classList.remove(s.openedClass);
+		s.popupEl.classList.remove(s.openedClass);
 	};
 
 	// Open popup and set proper text
 	var showWin = function() {
-		_popupEl.querySelector('h3').textContent = _gameWonText;
+		s.popupEl.querySelector('h3').textContent = s.gameWonText;
 		show();
 	};
 
 	var showLose = function() {
-		_popupEl.querySelector('h3').textContent = _gameLostText;
+		s.popupEl.querySelector('h3').textContent = s.gameLostText;
 		show();
 	};
 
 	// Initialize popup
-	var init = function() {
+	var init = function(config) {
 		
+		// Get user's defined options
+		for (var prop in config) {
+			if (config.hasOwnProperty(prop)) {
+				s[prop] = config[prop];
+			}
+		}
+
+		// When settings are ready, set local variables
+		popupBtn = s.popupEl.querySelector('button');
+
 		// Handle popup close events
 		// On button click
-		_popupBtn.addEventListener('click', close, false);
+		popupBtn.addEventListener('click', close, false);
 
 		// On outside popup click
-		_popupOverlayEl.addEventListener('click', close, false);
+		s.popupOverlayEl.addEventListener('click', close, false);
 
-		_popupEl.addEventListener('click', function(e) {
+		// But do nothing when clicked inside popup
+		s.popupEl.addEventListener('click', function(e) {
 			e.stopPropagation();
 		}, false);
 	};

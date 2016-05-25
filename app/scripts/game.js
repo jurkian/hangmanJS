@@ -1,28 +1,43 @@
 var Game = (function () {
-	
-	// Settings
-	var _alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
-			_phrase = '',
-			_phraseEl = document.getElementById('phrase'),
-			_maskedPhrase = '',
-			_visibleLetters = '',
-			_lettersEl = document.getElementById('alphabet'),
-			_singleLettersEl = _lettersEl.getElementsByTagName('li'),
-			_totalLives = 5,
-			_livesLeft = _totalLives,
-			_isNewGame = false;
+
+	// Default settings
+	var s = {
+		phraseEl: document.getElementById('phrase'),
+		alphabetEl: document.getElementById('alphabet'),
+		hangmanEl: document.getElementById('hangman'),
+		totalLives: 5,
+		singleLettersEl: '',
+	};
+
+	// Local variables
+	var alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
+		phrase = '',
+		maskedPhrase = '',
+		visibleLetters = '',
+		livesLeft = 0,
+		isNewGame = false;
 
 	// Start = get random phrase
-	var start = function(callback) {
-		
-		_handleGameStart();
+	var start = function(config, callback) {
+
+		// Get user's defined options
+		for (var prop in config) {
+			if (config.hasOwnProperty(prop)) {
+				s[prop] = config[prop];
+			}
+		}
+
+		// When settings are ready, set local variables
+		livesLeft = s.totalLives;
+
+		handleGameStart();
 
 		if (typeof callback === 'function') {
 			callback();
 		}
 	};
 
-	var _getPhrase = function(callback) {
+	var getPhrase = function(callback) {
 		var request = new XMLHttpRequest();
 
 		request.onreadystatechange = function() {
@@ -30,11 +45,11 @@ var Game = (function () {
 				
 				// Phrases loaded - get 1 random phrase
 				var json = JSON.parse(request.responseText),
-						random = Math.floor(Math.random() * json.length);
+					random = Math.floor(Math.random() * json.length);
 
-				_phrase = json[random].toUpperCase();
-				_maskedPhrase = _maskPhrase(_phrase);
-				_visibleLetters = _getVisibleLetters(_maskedPhrase);
+				phrase = json[random].toUpperCase();
+				maskedPhrase = maskPhrase(phrase);
+				visibleLetters = getVisibleLetters(maskedPhrase);
 
 				if (typeof callback === 'function') {
 					callback();
@@ -46,44 +61,56 @@ var Game = (function () {
 		request.send();
 	};
 
-	var _handleGameStart = function() {
+	var handleGameStart = function() {
 		
 		// Initialize status bar
-		StatusBar.init(_totalLives);
+		StatusBar.init({
+			lives: s.totalLives,
+			statusBarEl: s.statusBarEl,
+			pointsElName: s.pointsElName,
+			livesElName: s.livesElName,
+			resetPointsName: s.resetPointsName
+		});
 
 		// Initialize popup
-		Popup.init();
+		Popup.init({
+			popupOverlayEl: s.popupOverlayEl,
+			popupEl: s.popupEl,
+			gameWonText: s.gameWonText,
+			gameLostText: s.gameLostText,
+			openedClass: s.openedClass
+		});
 
 		// When you have a phrase...
-		_getPhrase(function() {
+		getPhrase(function() {
 
 			// Draw the alphabet only once
-			if (_isNewGame === false) {
+			if (isNewGame === false) {
 				// Draw alphabet
-				_drawAlphabet();
+				drawAlphabet();
 			}
 
 			// Handle the click on each letter
-			_handleLetterClicks();
+			handleLetterClicks();
 
 			// Draw masked new phrase
-			_drawMaskedPhrase();
+			drawMaskedPhrase();
 		
 			// Show every uncovered letter on the alphabet board
-			_uncoverPhraseParts();
+			uncoverPhraseParts();
 		});
 
 	};
 
 	// Mask 85% of the given phrase
-	var _maskPhrase = function(phrase) {
+	var maskPhrase = function(phrase) {
 
 		var howManyLettersToMask = Math.floor(phrase.length * 0.85),
-				maskedPhrase = phrase;
+			maskedPhrase = phrase;
 
 		while (howManyLettersToMask > 0) {
 			var random = Math.floor(Math.random() * phrase.length),
-					letter = phrase.charAt(random);
+				letter = phrase.charAt(random);
 
 			// Mask a letter if it's not: '_' and ' '
 			if (letter !== '_' && letter !== ' ') {
@@ -98,9 +125,9 @@ var Game = (function () {
 	};
 
 	// Get visible letters of a masked phrase
-	var _getVisibleLetters = function(maskedPhrase) {
+	var getVisibleLetters = function(maskedPhrase) {
 		var phrase = maskedPhrase.split(''),
-				visibleLetters = [];
+			visibleLetters = [];
 
 		for (var i = 0, len = phrase.length; i < len; i++) {
 			
@@ -117,122 +144,122 @@ var Game = (function () {
 	};
 	
 	// Draw masked phrase
-	var _drawMaskedPhrase = function() {
-		_phraseEl.innerHTML = _maskedPhrase;
+	var drawMaskedPhrase = function() {
+		s.phraseEl.innerHTML = maskedPhrase;
 	};
 	
 	// Draw alphabet on the chosen element
-	var _drawAlphabet = function() {
+	var drawAlphabet = function() {
 
-		for (var i = 0, len = _alphabet.length; i < len; i++) {
+		for (var i = 0, len = alphabet.length; i < len; i++) {
 			var singleLetterLi = document.createElement('li');
 
-			singleLetterLi.innerHTML = _alphabet.charAt(i);
-			_lettersEl.appendChild(singleLetterLi);
+			singleLetterLi.innerHTML = alphabet.charAt(i);
+			s.alphabetEl.appendChild(singleLetterLi);
 		}
+
+		s.singleLettersEl = s.alphabetEl.getElementsByTagName('li');
 
 	};
 
 	// Handle letter clicks
-	var _handleSingleClick = function(event) {
-		var letter = event.target.textContent;
-		_checkLetter(letter);
+	var handleSingleClick = function(e) {
+		var letter = e.target.textContent;
+		checkLetter(letter);
 	};
 
-	var _handleLetterClicks = function() {
-		for (var i = 0, len = _singleLettersEl.length; i < len; i++) {
-			_singleLettersEl[i].addEventListener('click', _handleSingleClick, false);
+	var handleLetterClicks = function() {
+		for (var i = 0, len = s.singleLettersEl.length; i < len; i++) {
+			s.singleLettersEl[i].addEventListener('click', handleSingleClick, false);
 		}
 	};
 
 	// Uncover phrase parts on game start
-	var _uncoverPhraseParts = function() {
-		for (var i = 0, len = _visibleLetters.length; i < len; i++) {
-			_revealLetter(_visibleLetters[i]);
+	var uncoverPhraseParts = function() {
+		for (var i = 0, len = visibleLetters.length; i < len; i++) {
+			revealLetter(visibleLetters[i]);
 		}
 	};
 
 	// Check if letter is correct - on click
-	var _checkLetter = function(letter) {
+	var checkLetter = function(letter) {
 
 		// Whether the user guessed or not, make sure the letter can't be clicked again
-		_revealLetter(letter);
+		revealLetter(letter);
 
 		// Check if the clicked letter is one of these hidden in the phrase
-		if (_phrase.indexOf(letter.toUpperCase()) > -1) {
+		if (phrase.indexOf(letter.toUpperCase()) > -1) {
 			// Letter found
 			return;
 		}
 
 		// Letter not found
-		_incorrectGuess();
+		incorrectGuess();
 	};
 
 	// Reveal the letter (can be multiple letters)
-	var _revealLetter = function(letterToReveal) {
+	var revealLetter = function(letterToReveal) {
 
-		for (var i = 0, len = _maskedPhrase.length; i < len; i++) {
-			if (_phrase.charAt(i).toUpperCase() === letterToReveal.toUpperCase()) {
-				_maskedPhrase = _maskedPhrase.replaceAt(i, _phrase.charAt(i));
+		for (var i = 0, len = maskedPhrase.length; i < len; i++) {
+			if (phrase.charAt(i).toUpperCase() === letterToReveal.toUpperCase()) {
+				maskedPhrase = maskedPhrase.replaceAt(i, phrase.charAt(i));
 			}
 		}
 
-		_phraseEl.innerHTML = _maskedPhrase;
-		_deactivateLetter(letterToReveal);
+		s.phraseEl.innerHTML = maskedPhrase;
+		deactivateLetter(letterToReveal);
 
 		// Check if user has won
-		var isPhraseRevealed = (_maskedPhrase.indexOf('_') === -1) ? true : false;
+		var isPhraseRevealed = (maskedPhrase.indexOf('_') === -1) ? true : false;
 
 		if (isPhraseRevealed) {
-			_finishGame('won');
+			finishGame('won');
 		}
 	};
 
 	// Mark letter as active and deactivate click listener
-	var _deactivateLetter = function(letter) {
-		var index = _alphabet.indexOf(letter);
+	var deactivateLetter = function(letter) {
+		var index = alphabet.indexOf(letter);
 
-		_singleLettersEl[index].classList.add('letter-active');
-		_singleLettersEl[index].removeEventListener('click', _handleSingleClick);
+		s.singleLettersEl[index].classList.add('letter-active');
+		s.singleLettersEl[index].removeEventListener('click', handleSingleClick);
 	};
 
-	var _incorrectGuess = function() {
+	var incorrectGuess = function() {
 		// Reduce lives and start showing the hangman
-		_livesLeft--;
-		StatusBar.drawLives(_livesLeft);
+		livesLeft--;
+		StatusBar.drawLives(livesLeft);
 
-		var hangman = document.getElementById('hangman'),
-				opacityToAdd = 1 / _totalLives,
-				hangmanOpacity = hangman.style.opacity || 0;
+		var opacityToAdd = 1 / s.totalLives,
+			hangmanOpacity = s.hangmanEl.style.opacity || 0;
 
-		hangman.style.opacity = parseFloat(hangmanOpacity) + parseFloat(opacityToAdd);
+		s.hangmanEl.style.opacity = parseFloat(hangmanOpacity) + parseFloat(opacityToAdd);
 
 		// If no more lives left -> game over
-		if (_livesLeft === 0) {
-			_finishGame('lost');
+		if (livesLeft === 0) {
+			finishGame('lost');
 		}
 	};
 
 	// Reset game so it can be played once again
-	var _resetGame = function() {
+	var resetGame = function() {
 		// Reset lives
-		_livesLeft = _totalLives;
-		StatusBar.drawLives(_livesLeft);
+		livesLeft = s.totalLives;
+		StatusBar.drawLives(livesLeft);
 
 		// Restore hangman's original opacity
-		var hangman = document.getElementById('hangman');
-		hangman.style.opacity = 0;
+		s.hangmanEl.style.opacity = 0;
 		
 		// Reset alphabet letters
-		for (var i = 0, len = _singleLettersEl.length; i < len; i++) {
-			_singleLettersEl[i].classList.remove('letter-active');
+		for (var i = 0, len = s.singleLettersEl.length; i < len; i++) {
+			s.singleLettersEl[i].classList.remove('letter-active');
 		}
 
 		// Mark it as new game
-		_isNewGame = true;
+		isNewGame = true;
 	};
 
-	var _finishGame = function(status) {
+	var finishGame = function(status) {
 		
 		// Show message
 		switch (status) {
@@ -252,13 +279,13 @@ var Game = (function () {
 		}
 
 		// Start a new game
-		_resetGame();
-		_handleGameStart();
+		resetGame();
+		handleGameStart();
 	};
 
 	// Public returns
 	return {
-	  start: start
+		start: start
 	};
 
 })();
