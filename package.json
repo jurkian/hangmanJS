@@ -1,23 +1,26 @@
 {
   "private": true,
+  "engines": {
+    "node": ">=4"
+  },
   "devDependencies": {
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.1",
     "grunt-autoprefixer": "^3.0.4",
     "grunt-browser-sync": "^2.1.2",
-    "grunt-concurrent": "^1.0.0",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-copy": "^0.8.2",
-    "grunt-contrib-cssmin": "^0.12.3",
+    "grunt-concurrent": "^2.3.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^1.0.1",
     "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-uglify": "^0.8.1",
-    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-uglify": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
     "grunt-processhtml": "^0.3.13",
     "grunt-sass": "^1.0.0",
     "grunt-uncss": "^0.5.0",
-    "jit-grunt": "^0.9.1",
+    "jit-grunt": "^0.10.0",
     "time-grunt": "^1.1.0"
   },
-  "engines": {
-    "node": ">=0.10.0"
+  "dependencies": {
+    "bootstrap-sass": "^3.3.6"
   }
 }
