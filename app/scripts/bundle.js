@@ -1,3 +1,4 @@
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var Helpers = require('./helpers.js'),
 	StatusBar = require('./status-bar.js'),
 	Popup = require('./popup.js');
@@ -288,3 +289,186 @@ var finishGame = function(status) {
 module.exports = {
 	start: start
 };
+},{"./helpers.js":2,"./popup.js":4,"./status-bar.js":5}],2:[function(require,module,exports){
+module.exports = (function() {
+	String.prototype.replaceAt = function(index, character) {
+		return this.substr(0, index) + character + this.substr(index + character.length);
+	};
+})();
+},{}],3:[function(require,module,exports){
+var Game = require('./game.js');
+
+// Run the game if all assets are loaded
+var init = function() {
+
+	var settings = {
+		phraseEl: document.getElementById('phrase'),
+		alphabetEl: document.getElementById('alphabet'),
+		hangmanEl: document.getElementById('hangman'),
+		totalLives: 5,
+
+		statusBarEl: document.getElementById('game-info-bar'),
+		pointsElName: '.game-info-points',
+		livesElName: '.game-info-lives',
+		resetPointsName: '.reset-points',
+
+		popupOverlayEl: document.querySelector('.popup-overlay'),
+		popupEl: document.querySelector('.popup'),
+		gameWonText: "Congratulations, you've won!",
+		gameLostText: "Oops... You've just lost a game",
+		openedClass: 'opened'
+	};
+
+	Game.start(settings);
+
+};
+window.addEventListener('load', init, false);
+},{"./game.js":1}],4:[function(require,module,exports){
+// Default settings
+var s = {
+	popupOverlayEl: document.querySelector('.popup-overlay'),
+	popupEl: document.querySelector('.popup'),
+	gameWonText: "Congratulations, you've won!",
+	gameLostText: "Oops... You've just lost a game",
+	openedClass: 'opened'
+};
+
+// Local variables
+var popupBtn = '';
+
+var show = function() {
+	s.popupOverlayEl.classList.add(s.openedClass);
+	s.popupEl.classList.add(s.openedClass);
+};
+
+var close = function() {
+	s.popupOverlayEl.classList.remove(s.openedClass);
+	s.popupEl.classList.remove(s.openedClass);
+};
+
+// Open popup and set proper text
+var showWin = function() {
+	s.popupEl.querySelector('h3').textContent = s.gameWonText;
+	show();
+};
+
+var showLose = function() {
+	s.popupEl.querySelector('h3').textContent = s.gameLostText;
+	show();
+};
+
+// Initialize popup
+var init = function(config) {
+	
+	// Get user's defined options
+	for (var prop in config) {
+		if (config.hasOwnProperty(prop)) {
+			s[prop] = config[prop];
+		}
+	}
+
+	// When settings are ready, set local variables
+	popupBtn = s.popupEl.querySelector('button');
+
+	// Handle popup close events
+	// On button click
+	popupBtn.addEventListener('click', close, false);
+
+	// On outside popup click
+	s.popupOverlayEl.addEventListener('click', close, false);
+
+	// But do nothing when clicked inside popup
+	s.popupEl.addEventListener('click', function(e) {
+		e.stopPropagation();
+	}, false);
+};
+
+module.exports = {
+	init: init,
+	showWin: showWin,
+	showLose: showLose,
+	close: close
+};
+},{}],5:[function(require,module,exports){
+// Default settings
+var s = {
+	lives: 5,
+	statusBarEl: document.getElementById('game-info-bar'),
+	pointsElName: '.game-info-points',
+	livesElName: '.game-info-lives',
+	resetPointsName: '.reset-points',
+};
+
+// Local variables
+var	pointsEl = '',
+	livesEl = '',
+	resetPointsEl = '';
+
+// Add x points to current score
+// Minimum score is 0, we don't need negative values
+var updatePoints = function(points) {
+	var currentScore = getCurrentScore(),
+		newScore = currentScore + parseInt(points, 10);
+
+	if (newScore >= 0) {
+		localStorage.setItem('hm_score', newScore);
+		pointsEl.textContent = newScore;
+	}
+};
+
+// Reset points to 0
+var resetPoints = function() {
+	localStorage.setItem('hm_score', 0);
+};
+
+var getCurrentScore = function() {
+	var currentScore = parseInt(localStorage.getItem('hm_score'), 10);
+
+	if (isNaN(currentScore) || currentScore === null) {
+		resetPoints();
+		return 0;
+	} else {
+		return currentScore;
+	}
+};
+
+var drawLives = function(lives) {
+	livesEl.textContent = lives;
+};
+
+var drawCurrentScore = function() {
+	pointsEl.textContent = getCurrentScore();
+};
+
+var init = function(config) {
+	
+	// Get user's defined options
+	for (var prop in config) {
+		if (config.hasOwnProperty(prop)) {
+			s[prop] = config[prop];
+		}
+	}
+
+	// When settings are ready, set local variables
+	pointsEl = s.statusBarEl.querySelector(s.pointsElName);
+	livesEl = s.statusBarEl.querySelector(s.livesElName);
+	resetPointsEl = s.statusBarEl.querySelector(s.resetPointsName);
+
+	drawCurrentScore();
+	drawLives(s.lives);
+
+	resetPointsEl.addEventListener('click', function() {
+		resetPoints();
+		drawCurrentScore();
+	}, false);
+};
+
+module.exports = {
+	init: init,
+	updatePoints: updatePoints,
+	getCurrentScore: getCurrentScore,
+	drawCurrentScore: drawCurrentScore,
+	resetPoints: resetPoints,
+	drawLives: drawLives
+};
+},{}]},{},[3]);

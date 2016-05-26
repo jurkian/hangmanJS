@@ -27,7 +27,7 @@ module.exports = function(grunt) {
       },
       javascript: {
         files: ['<%= config.app %>/scripts/{,*/}*.js'],
-        tasks: ['jshint']
+        tasks: ['jshint', 'browserify']
       },
       sass: {
         files: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
@@ -148,33 +148,30 @@ module.exports = function(grunt) {
       }
     },
 
+    browserify: {
+      js: {
+        src: 'app/scripts/main.js',
+        dest: 'app/scripts/bundle.js',
+      },
+    },
+
     // Working on JS
     // Jshint, then Uglify
 
     jshint: {
       dev: {
-        src: ['<%= config.app %>/scripts/{,*/}*.js']
+        src: [
+          '<%= config.app %>/scripts/{,*/}*.js',
+          '!<%= config.app %>/scripts/bundle*.js'
+        ]
       }
     },
 
     uglify: {
       dist: {
         files: {
-          '<%= config.dist %>/scripts/scripts.min.js': ['<%= config.app %>/scripts/*.js']
+          '<%= config.dist %>/scripts/bundle.js': ['<%= config.app %>/scripts/bundle.js']
         }
-      }
-    },
-
-    // Change HTML scripts paths to correct ones, on build
-    processhtml: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= config.dist %>',
-          src: ['*.html'],
-          dest: '<%= config.dist %>',
-          ext: '.html'
-        }]
       }
     },
 
@@ -216,6 +213,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('serve', 'start the server and preview your app', [
     'clean:server',
+    'browserify',
     'concurrent:server',
     'autoprefixer:server',
     'browserSync:livereload',
@@ -225,8 +223,8 @@ module.exports = function(grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'copy:dist',
-    'processhtml',
     'concurrent:dist',
+    'browserify',
     'uglify',
     'uncss',
     'autoprefixer:dist',
