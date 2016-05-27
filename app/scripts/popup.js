@@ -1,3 +1,5 @@
+var Tools = require('./tools.js');
+
 // Default settings
 var s = {
 	popupOverlayEl: document.querySelector('.popup-overlay'),
@@ -35,11 +37,7 @@ var showLose = function() {
 var init = function(config) {
 	
 	// Get user's defined options
-	for (var prop in config) {
-		if (config.hasOwnProperty(prop)) {
-			s[prop] = config[prop];
-		}
-	}
+	Tools.updateSettings(s, config);
 
 	// When settings are ready, set local variables
 	popupBtn = s.popupEl.querySelector('button');
@@ -60,6 +58,5 @@ var init = function(config) {
 module.exports = {
 	init: init,
 	showWin: showWin,
-	showLose: showLose,
-	close: close
+	showLose: showLose
 };

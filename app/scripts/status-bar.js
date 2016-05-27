@@ -1,3 +1,5 @@
+var Tools = require('./tools.js');
+
 // Default settings
 var s = {
 	lives: 5,
@@ -51,11 +53,7 @@ var drawCurrentScore = function() {
 var init = function(config) {
 	
 	// Get user's defined options
-	for (var prop in config) {
-		if (config.hasOwnProperty(prop)) {
-			s[prop] = config[prop];
-		}
-	}
+	Tools.updateSettings(s, config);
 
 	// When settings are ready, set local variables
 	pointsEl = s.statusBarEl.querySelector(s.pointsElName);
@@ -74,8 +72,5 @@ var init = function(config) {
 module.exports = {
 	init: init,
 	updatePoints: updatePoints,
-	getCurrentScore: getCurrentScore,
-	drawCurrentScore: drawCurrentScore,
-	resetPoints: resetPoints,
 	drawLives: drawLives
 };
