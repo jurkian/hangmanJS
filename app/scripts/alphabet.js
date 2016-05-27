@@ -53,15 +53,11 @@ var handleClicks = function(handleSingleClick) {
 };
 
 // Uncover phrase parts
-var uncoverPhraseParts = function(visibleLetters, maskedPhrase, callback) {
-
-	var updateMaskedPhrase = function(newMaskedPhrase) {
-		maskedPhrase = newMaskedPhrase;
-		callback(newMaskedPhrase);
-	};
+var uncoverPhraseParts = function() {
+	var visibleLetters = Phrase.get('visibleLetters');
 
 	for (var i = 0, len = visibleLetters.length; i < len; i++) {
-		revealLetter(visibleLetters[i], maskedPhrase, updateMaskedPhrase);
+		revealLetter(visibleLetters[i]);
 	}
 };
 
@@ -74,9 +70,10 @@ var deactivateLetter = function(letter) {
 };
 
 // Reveal the letter (can be multiple letters)
-var revealLetter = function(letterToReveal, maskedPhrase, callback) {
+var revealLetter = function(letterToReveal) {
 
-	var indexes = Tools.getAllIndexes(s.phrase, letterToReveal);
+	var maskedPhrase = Phrase.get('maskedPhrase'),
+		indexes = Tools.getAllIndexes(s.phrase, letterToReveal);
 
 	letterToReveal = letterToReveal.toUpperCase();
 	maskedPhrase = maskedPhrase.toUpperCase();
@@ -85,13 +82,10 @@ var revealLetter = function(letterToReveal, maskedPhrase, callback) {
 		maskedPhrase = maskedPhrase.replaceAt(indexes[j], letterToReveal);
 	}
 
+	Phrase.set('maskedPhrase', maskedPhrase);
 	Phrase.draw(s.phraseContainer, maskedPhrase);
 
 	deactivateLetter(letterToReveal);
-
-	if (typeof callback === 'function') {
-		callback(maskedPhrase);
-	}
 };
 
 module.exports = {

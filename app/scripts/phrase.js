@@ -1,5 +1,11 @@
+var s = {
+	phrase: '',
+	maskedPhrase: '',
+	visibleLetters: ''
+};
+
 // Get random phrase
-var get = function(callback) {
+var fetch = function(callback) {
 	var request = new XMLHttpRequest();
 
 	request.onreadystatechange = function() {
@@ -7,23 +13,29 @@ var get = function(callback) {
 
 			// Get 1 random phrase
 			var json = JSON.parse(request.responseText),
-				random = Math.floor(Math.random() * json.length),
-				phrase = '',
-				maskedPhrase = '',
-				visibleLetters = '';
+				random = Math.floor(Math.random() * json.length);
 
-			phrase = json[random].toUpperCase();
-			maskedPhrase = mask(phrase, 85);
-			visibleLetters = getVisibleLetters(maskedPhrase);
+			s.phrase = json[random].toUpperCase();
+			s.maskedPhrase = mask(s.phrase, 85);
+			s.visibleLetters = getVisibleLetters(s.maskedPhrase);
 
 			if (typeof callback === 'function') {
-				callback(phrase, maskedPhrase, visibleLetters);
+				callback(s.phrase, s.maskedPhrase, s.visibleLetters);
 			}
 		}
 	};
 
 	request.open('GET', 'words.json', true);
 	request.send();
+};
+
+// Getter and setter
+var get = function(value) {
+	return s[value];
+};
+
+var set = function(setting, value) {
+	s[setting] = value;
 };
 
 // Mask chosen % of the given phrase
@@ -53,8 +65,8 @@ var mask = function(phrase, percentage) {
 };
 
 // Draw masked phrase
-var draw = function(phraseContainer, maskedPhrase) {
-	phraseContainer.innerHTML = maskedPhrase;
+var draw = function(phraseContainer) {
+	phraseContainer.innerHTML = s.maskedPhrase;
 };
 
 // Get visible letters of a masked phrase
@@ -76,5 +88,7 @@ var getVisibleLetters = function(maskedPhrase) {
 
 module.exports = {
 	get: get,
+	set: set,
+	fetch: fetch,
 	draw: draw
 };

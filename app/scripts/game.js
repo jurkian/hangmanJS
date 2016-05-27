@@ -15,8 +15,6 @@ var s = {
 // Local variables
 var alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
 	phrase = '',
-	maskedPhrase = '',
-	visibleLetters = '',
 	singleLettersEls = '',
 	livesLeft = 0,
 	isNewGame = false;
@@ -63,12 +61,10 @@ var handleSingleClick = function(e) {
 
 var handleGameStart = function() {
 	// When you have a phrase...
-	Phrase.get(function(gotPhrase, gotMaskedPhrase, gotVisibleLetters) {
+	Phrase.fetch(function(gotPhrase) {
 
 		// Set local variables
 		phrase = gotPhrase;
-		maskedPhrase = gotMaskedPhrase;
-		visibleLetters = gotVisibleLetters;
 
 		Alphabet.init({
 			alphabet: alphabet,
@@ -88,12 +84,10 @@ var handleGameStart = function() {
 		Alphabet.handleClicks(handleSingleClick);
 
 		// Draw masked new phrase
-		Phrase.draw(s.phraseEl, maskedPhrase);
+		Phrase.draw(s.phraseEl);
 
 		// Show every uncovered letter on the alphabet board
-		Alphabet.uncoverPhraseParts(visibleLetters, maskedPhrase, function(newMaskedPhrase) {
-			maskedPhrase = newMaskedPhrase;
-		});
+		Alphabet.uncoverPhraseParts();
 	});
 };
 
@@ -101,22 +95,20 @@ var handleGameStart = function() {
 var checkLetter = function(letter) {
 
 	// Whether the user guessed or not, make sure the letter can't be clicked again
-	Alphabet.revealLetter(letter, maskedPhrase, function(newMaskedPhrase) {
-		maskedPhrase = newMaskedPhrase;
-	});
+	Alphabet.revealLetter(letter);
 
 	// Check if user has won
-	var isPhraseRevealed = (maskedPhrase.indexOf('_') === -1) ? true : false;
+	var isPhraseRevealed = (Phrase.get('maskedPhrase').indexOf('_') === -1) ? true : false;
 
 	if (isPhraseRevealed) {
-		finishGame('won');
+		finishGame(true);
 	}
 
 	// Check if the clicked letter is one of these hidden in the phrase
 	if (phrase.indexOf(letter.toUpperCase()) > -1) {
 		
 		// Letter found
-		
+
 	} else {
 
 		// Letter not found
@@ -136,7 +128,7 @@ var incorrectGuess = function() {
 
 	// If no more lives left -> game over
 	if (livesLeft === 0) {
-		finishGame('lost');
+		finishGame(false);
 	}
 };
 
@@ -156,18 +148,23 @@ var resetGame = function() {
 
 	// Mark it as new game
 	isNewGame = true;
+
+	handleGameStart();
 };
 
 var finishGame = function(status) {
 	
+	// Change status to bool
+	status = !!status;
+
 	// Show message
 	switch (status) {
-	case 'won':
+	case true:
 		Popup.showWin();
 		StatusBar.updatePoints(1);
 		break;
 
-	case 'lost':
+	case false:
 		Popup.showLose();
 		StatusBar.updatePoints(-1);
 		break;
@@ -179,7 +176,6 @@ var finishGame = function(status) {
 
 	// Start a new game
 	resetGame();
-	handleGameStart();
 };
 
 module.exports = {
