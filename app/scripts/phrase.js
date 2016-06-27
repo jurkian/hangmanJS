@@ -1,18 +1,18 @@
-var s = {
+let s = {
 	phrase: '',
 	maskedPhrase: '',
 	visibleLetters: ''
 };
 
 // Get random phrase
-var fetch = function(callback) {
-	var request = new XMLHttpRequest();
+let fetch = callback => {
+	let req = new XMLHttpRequest();
 
-	request.onreadystatechange = function() {
-		if (request.readyState === 4 && request.status === 200) {
+	req.onreadystatechange = () => {
+		if (req.readyState === 4 && req.status === 200) {
 
 			// Get 1 random phrase
-			var json = JSON.parse(request.responseText),
+			let json = JSON.parse(req.responseText),
 				random = Math.floor(Math.random() * json.length);
 
 			s.phrase = json[random].toUpperCase();
@@ -25,30 +25,30 @@ var fetch = function(callback) {
 		}
 	};
 
-	request.open('GET', 'words.json', true);
-	request.send();
+	req.open('GET', 'words.json', true);
+	req.send();
 };
 
 // Getter and setter
-var get = function(value) {
+let get = value => {
 	return s[value];
 };
 
-var set = function(setting, value) {
+let set = (setting, value) => {
 	s[setting] = value;
 };
 
 // Mask chosen % of the given phrase
-var mask = function(phrase, percentage) {
+let mask = (phrase, percentage) => {
 
 	percentage /= 100;
 	
-	var howManyLettersToMask = Math.floor(phrase.length * percentage),
+	let howManyLettersToMask = Math.floor(phrase.length * percentage),
 		maskedPhrase = phrase;
 
 	// Randomly mask letters
 	while (howManyLettersToMask > 0) {
-		var random = Math.floor(Math.random() * phrase.length),
+		let random = Math.floor(Math.random() * phrase.length),
 			letter = phrase.charAt(random);
 
 		// Mask only letters
@@ -65,30 +65,31 @@ var mask = function(phrase, percentage) {
 };
 
 // Draw masked phrase
-var draw = function(phraseContainer) {
+let draw = phraseContainer => {
 	phraseContainer.innerHTML = s.maskedPhrase;
 };
 
 // Get visible letters of a masked phrase
-var getVisibleLetters = function(maskedPhrase) {
-	var phrase = maskedPhrase.split(''),
-		visibleLetters = [];
-
-	for (var i = 0, len = phrase.length; i < len; i++) {
-		// If you find '_' or ' ' or a duplicate letter - continue
-		if (phrase[i] === '_' || phrase[i] === ' ' || visibleLetters.indexOf(phrase[i]) > -1) {
-			continue;
+let getVisibleLetters = maskedPhrase => {
+	let phrase = maskedPhrase.split(''),
+		duplicateEls = [];
+	
+	// Get all letters except: duplicates, '_' and ' '
+	let visibleLetters = phrase.filter(letter => {
+		if (duplicateEls.indexOf(letter) === -1 && letter !== '_' && letter !== ' ') {
+			duplicateEls.push(letter);
+			return true;
 		} else {
-			visibleLetters.push(phrase[i]);
+			return false;
 		}
-	}
+	});
 
 	return visibleLetters;
 };
 
 module.exports = {
-	get: get,
-	set: set,
-	fetch: fetch,
-	draw: draw
+	get,
+	set,
+	fetch,
+	draw
 };

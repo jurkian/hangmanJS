@@ -1,7 +1,7 @@
-var Tools = require('./tools.js');
+let Tools = require('./tools.js');
 
 // Default settings
-var s = {
+let s = {
 	lives: 5,
 	statusBarEl: document.getElementById('game-info-bar'),
 	pointsElName: '.game-info-points',
@@ -10,14 +10,14 @@ var s = {
 };
 
 // Local variables
-var	pointsEl = '',
+let	pointsEl = '',
 	livesEl = '',
 	resetPointsEl = '';
 
 // Add x points to current score
 // Minimum score is 0, we don't need negative values
-var updatePoints = function(points) {
-	var currentScore = getCurrentScore(),
+let updatePoints = function(points) {
+	let currentScore = getCurrentScore(),
 		newScore = currentScore + parseInt(points, 10);
 
 	if (newScore >= 0) {
@@ -27,14 +27,14 @@ var updatePoints = function(points) {
 };
 
 // Reset points to 0
-var resetPoints = function() {
+let resetPoints = function() {
 	localStorage.setItem('hm_score', 0);
 };
 
-var getCurrentScore = function() {
-	var currentScore = parseInt(localStorage.getItem('hm_score'), 10);
+let getCurrentScore = function() {
+	let currentScore = parseInt(localStorage.getItem('hm_score'), 10);
 
-	if (isNaN(currentScore) || currentScore === null) {
+	if (isNaN(currentScore) || !currentScore) {
 		resetPoints();
 		return 0;
 	} else {
@@ -42,15 +42,15 @@ var getCurrentScore = function() {
 	}
 };
 
-var drawLives = function(lives) {
+let drawLives = function(lives) {
 	livesEl.textContent = lives;
 };
 
-var drawCurrentScore = function() {
+let drawCurrentScore = function() {
 	pointsEl.textContent = getCurrentScore();
 };
 
-var init = function(config) {
+let init = function(config) {
 	
 	// Get user's defined options
 	Tools.updateSettings(s, config);
@@ -70,7 +70,7 @@ var init = function(config) {
 };
 
 module.exports = {
-	init: init,
-	updatePoints: updatePoints,
-	drawLives: drawLives
+	init,
+	updatePoints,
+	drawLives
 };

@@ -168,6 +168,9 @@ module.exports = function(grunt) {
 		// Jshint, then Uglify
 
 		jshint: {
+			options: {
+				jshintrc: true,
+			},
 			dev: {
 				src: [
 					'<%= config.app %>/scripts/{,*/}*.js',

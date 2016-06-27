@@ -1,7 +1,7 @@
-var Tools = require('./tools.js');
+let Tools = require('./tools.js');
 
 // Default settings
-var s = {
+let s = {
 	popupOverlayEl: document.querySelector('.popup-overlay'),
 	popupEl: document.querySelector('.popup'),
 	gameWonText: "Congratulations, you've won!",
@@ -10,31 +10,31 @@ var s = {
 };
 
 // Local variables
-var popupBtn = '';
+let popupBtn = '';
 
-var show = function() {
+let show = function() {
 	s.popupOverlayEl.classList.add(s.openedClass);
 	s.popupEl.classList.add(s.openedClass);
 };
 
-var close = function() {
+let close = function() {
 	s.popupOverlayEl.classList.remove(s.openedClass);
 	s.popupEl.classList.remove(s.openedClass);
 };
 
 // Open popup and set proper text
-var showWin = function() {
+let showWin = function() {
 	s.popupEl.querySelector('h3').textContent = s.gameWonText;
 	show();
 };
 
-var showLose = function() {
+let showLose = function() {
 	s.popupEl.querySelector('h3').textContent = s.gameLostText;
 	show();
 };
 
 // Initialize popup
-var init = function(config) {
+let init = function(config) {
 	
 	// Get user's defined options
 	Tools.updateSettings(s, config);
@@ -56,7 +56,7 @@ var init = function(config) {
 };
 
 module.exports = {
-	init: init,
-	showWin: showWin,
-	showLose: showLose
+	init,
+	showWin,
+	showLose
 };
