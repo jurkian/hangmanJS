@@ -1,11 +1,11 @@
-var Tools = require('./tools.js'),
+let Tools = require('./tools.js'),
 	Phrase = require('./phrase.js'),
 	Alphabet = require('./alphabet.js'),
 	StatusBar = require('./status-bar.js'),
 	Popup = require('./popup.js');
 
 // Default settings
-var s = {
+let s = {
 	phraseEl: document.getElementById('phrase'),
 	alphabetEl: document.getElementById('alphabet'),
 	hangmanEl: document.getElementById('hangman'),
@@ -13,14 +13,14 @@ var s = {
 };
 
 // Local variables
-var alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
+let alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
 	phrase = '',
 	singleLettersEls = '',
 	livesLeft = 0,
 	isNewGame = false;
 
 // Start = get random phrase
-var start = function(config, callback) {
+let start = (config, callback) => {
 
 	// Get user's defined options
 	Tools.updateSettings(s, config);
@@ -46,7 +46,6 @@ var start = function(config, callback) {
 		openedClass: s.openedClass
 	});
 
-	// When you have a phrase...
 	handleGameStart();
 
 	if (typeof callback === 'function') {
@@ -54,14 +53,14 @@ var start = function(config, callback) {
 	}
 };
 
-var handleSingleClick = function(e) {
-	var letter = e.target.textContent;
+let handleSingleClick = e => {
+	let letter = e.target.textContent;
 	checkLetter(letter);
 };
 
-var handleGameStart = function() {
+let handleGameStart = () => {
 	// When you have a phrase...
-	Phrase.fetch(function(gotPhrase) {
+	Phrase.fetch(gotPhrase => {
 
 		// Set local variables
 		phrase = gotPhrase;
@@ -75,7 +74,7 @@ var handleGameStart = function() {
 
 		// Draw the alphabet only once
 		if (isNewGame === false) {
-			Alphabet.draw(function() {
+			Alphabet.draw(() => {
 				singleLettersEls = Alphabet.getLettersEls();
 			});
 		}
@@ -92,13 +91,13 @@ var handleGameStart = function() {
 };
 
 // Check if letter is correct - on click
-var checkLetter = function(letter) {
+let checkLetter = letter => {
 
 	// Whether the user guessed or not, make sure the letter can't be clicked again
 	Alphabet.revealLetter(letter);
 
 	// Check if user has won
-	var isPhraseRevealed = (Phrase.get('maskedPhrase').indexOf('_') === -1) ? true : false;
+	let isPhraseRevealed = (Phrase.get('maskedPhrase').indexOf('_') === -1) ? true : false;
 
 	if (isPhraseRevealed) {
 		finishGame(true);
@@ -116,12 +115,12 @@ var checkLetter = function(letter) {
 	}
 };
 
-var incorrectGuess = function() {
+let incorrectGuess = () => {
 	// Reduce lives and start showing the hangman
 	livesLeft--;
 	StatusBar.drawLives(livesLeft);
 
-	var opacityToAdd = 1 / s.totalLives,
+	let opacityToAdd = 1 / s.totalLives,
 		hangmanOpacity = s.hangmanEl.style.opacity || 0;
 
 	s.hangmanEl.style.opacity = parseFloat(hangmanOpacity) + parseFloat(opacityToAdd);
@@ -133,7 +132,7 @@ var incorrectGuess = function() {
 };
 
 // Reset game so it can be played once again
-var resetGame = function() {
+let resetGame = () => {
 	// Reset lives
 	livesLeft = s.totalLives;
 	StatusBar.drawLives(livesLeft);
@@ -142,7 +141,7 @@ var resetGame = function() {
 	s.hangmanEl.style.opacity = 0;
 	
 	// Reset alphabet letters
-	for (var i = 0, len = singleLettersEls.length; i < len; i++) {
+	for (let i = 0, len = singleLettersEls.length; i < len; i++) {
 		singleLettersEls[i].classList.remove('letter-active');
 	}
 
@@ -152,7 +151,7 @@ var resetGame = function() {
 	handleGameStart();
 };
 
-var finishGame = function(status) {
+let finishGame = status => {
 	
 	// Change status to bool
 	status = !!status;
@@ -179,5 +178,5 @@ var finishGame = function(status) {
 };
 
 module.exports = {
-	start: start
+	start
 };

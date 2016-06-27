@@ -30,13 +30,9 @@ let fetch = callback => {
 };
 
 // Getter and setter
-let get = value => {
-	return s[value];
-};
+let get = value => s[value];
 
-let set = (setting, value) => {
-	s[setting] = value;
-};
+let set = (setting, value) => s[setting] = value;
 
 // Mask chosen % of the given phrase
 let mask = (phrase, percentage) => {
@@ -65,15 +61,13 @@ let mask = (phrase, percentage) => {
 };
 
 // Draw masked phrase
-let draw = phraseContainer => {
-	phraseContainer.innerHTML = s.maskedPhrase;
-};
+let draw = phraseContainer => phraseContainer.innerHTML = s.maskedPhrase;
 
 // Get visible letters of a masked phrase
 let getVisibleLetters = maskedPhrase => {
 	let phrase = maskedPhrase.split(''),
 		duplicateEls = [];
-	
+
 	// Get all letters except: duplicates, '_' and ' '
 	let visibleLetters = phrase.filter(letter => {
 		if (duplicateEls.indexOf(letter) === -1 && letter !== '_' && letter !== ' ') {

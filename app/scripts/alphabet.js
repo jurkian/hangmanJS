@@ -1,8 +1,8 @@
-var Tools = require('./tools.js'),
+let Tools = require('./tools.js'),
 	Phrase = require('./phrase.js');
 
 // Settings
-var s = {
+let s = {
 	alphabet: '',
 	alphabetContainer: {},
 	phrase: '',
@@ -10,28 +10,28 @@ var s = {
 };
 
 // Local variables
-var singleLettersEls = {},
+let singleLettersEls = {},
 	handleClicksFn = {};
 
 // Get user's defined options
-var init = function(config) {
+let init = config => {
 	Tools.updateSettings(s, config);
 };
 
 // Get single letters as DOM elements
-var getLettersEls = function() {
+let getLettersEls = () => {
 	return singleLettersEls;
 };
 
 // Draw alphabet
-var draw = function(callback) {
+let draw = callback => {
 
-	for (var i = 0, len = s.alphabet.length; i < len; i++) {
-		var singleLetterLi = document.createElement('li');
+	s.alphabet.split('').forEach((el, index) => {
+		let singleLetterLi = document.createElement('li');
 
-		singleLetterLi.innerHTML = s.alphabet.charAt(i);
+		singleLetterLi.innerHTML = el;
 		s.alphabetContainer.appendChild(singleLetterLi);
-	}
+	});
 
 	singleLettersEls = s.alphabetContainer.getElementsByTagName('li');
 
@@ -42,45 +42,41 @@ var draw = function(callback) {
 };
 
 // Handle letter clicks
-var handleClicks = function(handleSingleClick) {
+let handleClicks = handleSingleClick => {
 	if (typeof handleSingleClick === 'function') {
-		handleClicksFn = handleSingleClick;
-
-		for (var i = 0, len = singleLettersEls.length; i < len; i++) {
-			singleLettersEls[i].addEventListener('click', handleClicksFn, false);
+		for (let i = 0, len = singleLettersEls.length; i < len; i++) {
+			singleLettersEls[i].addEventListener('click', handleSingleClick, false);
 		}
 	}
 };
 
 // Uncover phrase parts
-var uncoverPhraseParts = function() {
-	var visibleLetters = Phrase.get('visibleLetters');
-
-	for (var i = 0, len = visibleLetters.length; i < len; i++) {
-		revealLetter(visibleLetters[i]);
-	}
+let uncoverPhraseParts = () => {
+	Phrase.get('visibleLetters').forEach((el, index) => {
+		revealLetter(el);
+	});
 };
 
 // Mark letter as active and deactivate click listener
-var deactivateLetter = function(letter) {
-	var index = s.alphabet.indexOf(letter);
+let deactivateLetter = letter => {
+	let index = s.alphabet.indexOf(letter);
 
 	singleLettersEls[index].classList.add('letter-active');
 	singleLettersEls[index].removeEventListener('click', handleClicksFn);
 };
 
 // Reveal the letter (can be multiple letters)
-var revealLetter = function(letterToReveal) {
+let revealLetter = letterToReveal => {
 
-	var maskedPhrase = Phrase.get('maskedPhrase'),
+	let maskedPhrase = Phrase.get('maskedPhrase'),
 		indexes = Tools.getAllIndexes(s.phrase, letterToReveal);
 
 	letterToReveal = letterToReveal.toUpperCase();
 	maskedPhrase = maskedPhrase.toUpperCase();
 
-	for (var j = 0, len = indexes.length; j < len; j++) {
-		maskedPhrase = maskedPhrase.replaceAt(indexes[j], letterToReveal);
-	}
+	indexes.forEach((el, index) => {
+		maskedPhrase = maskedPhrase.replaceAt(el, letterToReveal);
+	});
 
 	Phrase.set('maskedPhrase', maskedPhrase);
 	Phrase.draw(s.phraseContainer, maskedPhrase);
@@ -89,10 +85,10 @@ var revealLetter = function(letterToReveal) {
 };
 
 module.exports = {
-	init: init,
-	draw: draw,
-	handleClicks: handleClicks,
-	getLettersEls: getLettersEls,
-	uncoverPhraseParts: uncoverPhraseParts,
-	revealLetter: revealLetter
+	init,
+	draw,
+	handleClicks,
+	getLettersEls,
+	uncoverPhraseParts,
+	revealLetter
 };

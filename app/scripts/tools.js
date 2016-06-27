@@ -6,8 +6,8 @@ String.prototype.replaceAt = function(index, character) {
 // Overwrite default settings with user's
 // Even if the single setting doesn't exist in defaults
 // create a new one basing on newSettings
-var updateSettings = function(defaultSettings, newSettings) {
-	for (var prop in newSettings) {
+let updateSettings = (defaultSettings, newSettings) => {
+	for (let prop in newSettings) {
 		if (newSettings.hasOwnProperty(prop)) {
 			defaultSettings[prop] = newSettings[prop];
 		}
@@ -15,11 +15,11 @@ var updateSettings = function(defaultSettings, newSettings) {
 };
 
 // Get all indexes of value in array
-var getAllIndexes = function(arr, val) {
-	var indexes = [], 
+let getAllIndexes = (arr, val) => {
+	let indexes = [],
 		i = -1;
 
-	while ((i = arr.indexOf(val, i + 1)) != -1) {
+	while ((i = arr.indexOf(val, i + 1)) !== -1) {
 		indexes.push(i);
 	}
 
@@ -27,6 +27,6 @@ var getAllIndexes = function(arr, val) {
 };
 
 module.exports = {
-	updateSettings: updateSettings,
-	getAllIndexes: getAllIndexes
+	updateSettings,
+	getAllIndexes
 };

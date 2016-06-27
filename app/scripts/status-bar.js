@@ -16,7 +16,7 @@ let	pointsEl = '',
 
 // Add x points to current score
 // Minimum score is 0, we don't need negative values
-let updatePoints = function(points) {
+let updatePoints = points => {
 	let currentScore = getCurrentScore(),
 		newScore = currentScore + parseInt(points, 10);
 
@@ -27,11 +27,11 @@ let updatePoints = function(points) {
 };
 
 // Reset points to 0
-let resetPoints = function() {
+let resetPoints = () => {
 	localStorage.setItem('hm_score', 0);
 };
 
-let getCurrentScore = function() {
+let getCurrentScore = () => {
 	let currentScore = parseInt(localStorage.getItem('hm_score'), 10);
 
 	if (isNaN(currentScore) || !currentScore) {
@@ -42,15 +42,11 @@ let getCurrentScore = function() {
 	}
 };
 
-let drawLives = function(lives) {
-	livesEl.textContent = lives;
-};
+let drawLives = lives => livesEl.textContent = lives;
 
-let drawCurrentScore = function() {
-	pointsEl.textContent = getCurrentScore();
-};
+let drawCurrentScore = () => pointsEl.textContent = getCurrentScore();
 
-let init = function(config) {
+let init = config => {
 	
 	// Get user's defined options
 	Tools.updateSettings(s, config);
@@ -63,7 +59,7 @@ let init = function(config) {
 	drawCurrentScore();
 	drawLives(s.lives);
 
-	resetPointsEl.addEventListener('click', function() {
+	resetPointsEl.addEventListener('click', () => {
 		resetPoints();
 		drawCurrentScore();
 	}, false);

@@ -12,29 +12,29 @@ let s = {
 // Local variables
 let popupBtn = '';
 
-let show = function() {
+let show = () => {
 	s.popupOverlayEl.classList.add(s.openedClass);
 	s.popupEl.classList.add(s.openedClass);
 };
 
-let close = function() {
+let close = () => {
 	s.popupOverlayEl.classList.remove(s.openedClass);
 	s.popupEl.classList.remove(s.openedClass);
 };
 
 // Open popup and set proper text
-let showWin = function() {
+let showWin = () => {
 	s.popupEl.querySelector('h3').textContent = s.gameWonText;
 	show();
 };
 
-let showLose = function() {
+let showLose = () => {
 	s.popupEl.querySelector('h3').textContent = s.gameLostText;
 	show();
 };
 
 // Initialize popup
-let init = function(config) {
+let init = config => {
 	
 	// Get user's defined options
 	Tools.updateSettings(s, config);
@@ -50,7 +50,7 @@ let init = function(config) {
 	s.popupOverlayEl.addEventListener('click', close, false);
 
 	// But do nothing when clicked inside popup
-	s.popupEl.addEventListener('click', function(e) {
+	s.popupEl.addEventListener('click', e => {
 		e.stopPropagation();
 	}, false);
 };

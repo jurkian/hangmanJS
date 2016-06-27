@@ -1,9 +1,9 @@
-var Game = require('./game.js');
+let Game = require('./game.js');
 
 // Run the game if all assets are loaded
-var init = function() {
+let init = () => {
 
-	var settings = {
+	let settings = {
 		phraseEl: document.getElementById('phrase'),
 		alphabetEl: document.getElementById('alphabet'),
 		hangmanEl: document.getElementById('hangman'),
