@@ -165,7 +165,20 @@ module.exports = function(grunt) {
 		},
 
 		// Working on JS
+		// Babel
 		// Jshint, then Uglify
+
+		babel: {
+			options: {
+				sourceMap: true,
+				presets: ['es2015']
+			},
+			dev: {
+				files: {
+				    '<%= config.app %>/scripts/bundle.js': '<%= config.app %>/scripts/bundle.js'
+				}
+			}
+		},
 
 		jshint: {
 			options: {
@@ -226,6 +239,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('serve', 'start the server and preview your app', [
 		'clean:server',
 		'browserify:server',
+		'babel',
 		'concurrent:server',
 		'autoprefixer:server',
 		'browserSync:livereload',
@@ -237,6 +251,7 @@ module.exports = function(grunt) {
 		'copy:dist',
 		'concurrent:dist',
 		'browserify:dist',
+		'babel',
 		'uglify',
 		'uncss',
 		'autoprefixer:dist',
