@@ -20,37 +20,36 @@ let alphabet = 'abcdefghijklmnopqrstuwvxyz'.toUpperCase(),
 	isNewGame = false;
 
 // Start = get random phrase
-let start = (config, callback) => {
+let start = config => {
+	return new Promise((resolve, reject) => {
 
-	// Get user's defined options
-	Tools.updateSettings(s, config);
+		// Get user's defined options
+		Tools.updateSettings(s, config);
 
-	// When settings are ready, set local variables
-	livesLeft = s.totalLives;
+		// When settings are ready, set local variables
+		livesLeft = s.totalLives;
 
-	// Initialize status bar
-	StatusBar.init({
-		lives: s.totalLives,
-		statusBarEl: s.statusBarEl,
-		pointsElName: s.pointsElName,
-		livesElName: s.livesElName,
-		resetPointsName: s.resetPointsName
+		// Initialize status bar
+		StatusBar.init({
+			lives: s.totalLives,
+			statusBarEl: s.statusBarEl,
+			pointsElName: s.pointsElName,
+			livesElName: s.livesElName,
+			resetPointsName: s.resetPointsName
+		});
+
+		// Initialize popup
+		Popup.init({
+			popupOverlayEl: s.popupOverlayEl,
+			popupEl: s.popupEl,
+			gameWonText: s.gameWonText,
+			gameLostText: s.gameLostText,
+			openedClass: s.openedClass
+		});
+
+		handleGameStart();
+		resolve();
 	});
-
-	// Initialize popup
-	Popup.init({
-		popupOverlayEl: s.popupOverlayEl,
-		popupEl: s.popupEl,
-		gameWonText: s.gameWonText,
-		gameLostText: s.gameLostText,
-		openedClass: s.openedClass
-	});
-
-	handleGameStart();
-
-	if (typeof callback === 'function') {
-		callback();
-	}
 };
 
 let handleSingleClick = e => {
@@ -60,10 +59,11 @@ let handleSingleClick = e => {
 
 let handleGameStart = () => {
 	// When you have a phrase...
-	Phrase.fetch(gotPhrase => {
+	Phrase.fetch()
+	.then(newPhrase => {
 
 		// Set local variables
-		phrase = gotPhrase;
+		phrase = newPhrase;
 
 		Alphabet.init({
 			alphabet: alphabet,
@@ -74,7 +74,8 @@ let handleGameStart = () => {
 
 		// Draw the alphabet only once
 		if (isNewGame === false) {
-			Alphabet.draw(() => {
+			Alphabet.draw()
+			.then(() => {
 				singleLettersEls = Alphabet.getLettersEls();
 			});
 		}
@@ -141,8 +142,9 @@ let resetGame = () => {
 	s.hangmanEl.style.opacity = 0;
 	
 	// Reset alphabet letters
-	for (let i = 0, len = singleLettersEls.length; i < len; i++) {
-		singleLettersEls[i].classList.remove('letter-active');
+
+	for (let el of singleLettersEls) {
+		el.classList.remove('letter-active');
 	}
 
 	// Mark it as new game

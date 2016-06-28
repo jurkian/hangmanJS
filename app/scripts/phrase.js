@@ -5,11 +5,13 @@ let s = {
 };
 
 // Get random phrase
-let fetch = callback => {
-	let req = new XMLHttpRequest();
+let fetch = () => {
+	return new Promise((resolve, reject) => {
 
-	req.onreadystatechange = () => {
-		if (req.readyState === 4 && req.status === 200) {
+		let req = new XMLHttpRequest();
+		req.open('GET', 'words.json', true);
+
+		req.onload = () => {
 
 			// Get 1 random phrase
 			let json = JSON.parse(req.responseText),
@@ -19,14 +21,15 @@ let fetch = callback => {
 			s.maskedPhrase = mask(s.phrase, 85);
 			s.visibleLetters = getVisibleLetters(s.maskedPhrase);
 
-			if (typeof callback === 'function') {
-				callback(s.phrase, s.maskedPhrase, s.visibleLetters);
-			}
-		}
-	};
+			resolve(s.phrase);
+		};
 
-	req.open('GET', 'words.json', true);
-	req.send();
+		req.onerror = () => {
+			reject(req.statusText);
+		};
+
+		req.send();
+	});
 };
 
 // Getter and setter

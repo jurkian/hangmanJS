@@ -1,3 +1,5 @@
+require('./polyfills.js');
+
 let Game = require('./game.js');
 
 // Run the game if all assets are loaded
