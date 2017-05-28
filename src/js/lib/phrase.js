@@ -45,7 +45,7 @@ let mask = (phrase, percentage) => {
 
 	// Randomly mask letters
 	while (howManyLettersToMask > 0) {
-		let randomInt = random(0, phrase.length),
+		let randomInt = random(0, phrase.length - 1),
 			letter = phrase.charAt(randomInt);
 
 		// Mask only letters
