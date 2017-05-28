@@ -1,3 +1,5 @@
+import random from 'lodash.random';
+
 let s = {
 	phrase: '',
 	maskedPhrase: '',
@@ -17,9 +19,9 @@ Phrase.fetch = () => {
 		.then(data => {
 
 			// Get 1 random phrase
-			let random = Math.floor(Math.random() * data.length);
+			let randomPhrase = random(0, data.length);
 
-			s.phrase = data[random].toUpperCase();
+			s.phrase = data[randomPhrase].toUpperCase();
 			s.maskedPhrase = mask(s.phrase, 85);
 			s.visibleLetters = getVisibleLetters(s.maskedPhrase);
 
@@ -43,14 +45,15 @@ let mask = (phrase, percentage) => {
 
 	// Randomly mask letters
 	while (howManyLettersToMask > 0) {
-		let random = Math.floor(Math.random() * phrase.length),
-			letter = phrase.charAt(random);
+		let randomInt = random(0, phrase.length),
+			letter = phrase.charAt(randomInt);
 
 		// Mask only letters
 		// Exclude: '_' and ' '
 		if (letter !== '_' && letter !== ' ') {
-			maskedPhrase = maskedPhrase.replaceAt(random, '_');
+			maskedPhrase = maskedPhrase.replaceAt(randomInt, '_');
 			howManyLettersToMask--;
+
 		} else {
 			continue;
 		}
@@ -72,6 +75,7 @@ let getVisibleLetters = maskedPhrase => {
 		if (duplicateEls.indexOf(letter) === -1 && letter !== '_' && letter !== ' ') {
 			duplicateEls.push(letter);
 			return true;
+			
 		} else {
 			return false;
 		}
