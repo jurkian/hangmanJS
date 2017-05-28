@@ -75,9 +75,7 @@ let handleGameStart = () => {
 		// Draw the alphabet only once
 		if (isNewGame === false) {
 			Alphabet.draw()
-			.then(() => {
-				singleLettersEls = Alphabet.getLettersEls();
-			});
+			singleLettersEls = Alphabet.getLettersEls();
 		}
 
 		// Handle the click on each letter

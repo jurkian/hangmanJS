@@ -27,18 +27,14 @@ Alphabet.getLettersEls = () => {
 
 // Draw alphabet
 Alphabet.draw = () => {
-	return new Promise((resolve, reject) => {
+	s.alphabet.split('').forEach((el, index) => {
+		let singleLetterLi = document.createElement('li');
 
-		s.alphabet.split('').forEach((el, index) => {
-			let singleLetterLi = document.createElement('li');
-
-			singleLetterLi.innerHTML = el;
-			s.alphabetContainer.appendChild(singleLetterLi);
-		});
-
-		singleLettersEls = s.alphabetContainer.querySelectorAll('li');
-		resolve();
+		singleLetterLi.innerHTML = el;
+		s.alphabetContainer.appendChild(singleLetterLi);
 	});
+
+	singleLettersEls = s.alphabetContainer.querySelectorAll('li');
 };
 
 // Handle letter clicks
