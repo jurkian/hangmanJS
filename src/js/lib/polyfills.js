@@ -1,1 +1,2 @@
-require('core-js/library/es6/promise');
+// Fetch polyfill
+import 'whatwg-fetch';

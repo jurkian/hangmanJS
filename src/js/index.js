@@ -7,20 +7,19 @@ import '../sass/site.scss';
 // API
 import '../api/words.json';
 
-import './lib/polyfills.js';
+import './lib/polyfills';
 
-let Game = require('./lib/game.js');
+import start from './lib/game';
 
-// Run the game if all assets are loaded
-let init = () => {
-
+// Run the game when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
 	let settings = {
-		phraseEl: document.getElementById('phrase'),
-		alphabetEl: document.getElementById('alphabet'),
-		hangmanEl: document.getElementById('hangman'),
+		phraseEl: document.querySelector('#phrase'),
+		alphabetEl: document.querySelector('#alphabet'),
+		hangmanEl: document.querySelector('#hangman'),
 		totalLives: 5,
 
-		statusBarEl: document.getElementById('game-info-bar'),
+		statusBarEl: document.querySelector('#game-info-bar'),
 		pointsElName: '.game-info-points',
 		livesElName: '.game-info-lives',
 		resetPointsName: '.reset-points',
@@ -32,7 +31,5 @@ let init = () => {
 		openedClass: 'opened'
 	};
 
-	Game.start(settings);
-
-};
-window.addEventListener('load', init, false);
+	start(settings);
+});

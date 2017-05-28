@@ -1,41 +1,39 @@
+import random from 'lodash.random';
+
 let s = {
 	phrase: '',
 	maskedPhrase: '',
 	visibleLetters: ''
 };
 
+let Phrase = {};
+
 // Get random phrase
-let fetch = () => {
+Phrase.fetch = () => {
 	return new Promise((resolve, reject) => {
 
-		let req = new XMLHttpRequest();
-		req.open('GET', 'api/words.json', true);
-
-		req.onload = () => {
+		fetch('api/words.json', {
+			method: 'GET'
+		})
+		.then((response) => response.json())
+		.then(data => {
 
 			// Get 1 random phrase
-			let json = JSON.parse(req.responseText),
-				random = Math.floor(Math.random() * json.length);
+			let randomPhrase = random(0, data.length);
 
-			s.phrase = json[random].toUpperCase();
+			s.phrase = data[randomPhrase].toUpperCase();
 			s.maskedPhrase = mask(s.phrase, 85);
 			s.visibleLetters = getVisibleLetters(s.maskedPhrase);
 
 			resolve(s.phrase);
-		};
-
-		req.onerror = () => {
-			reject(req.statusText);
-		};
-
-		req.send();
+		});
 	});
 };
 
 // Getter and setter
-let get = value => s[value];
+Phrase.get = value => s[value];
 
-let set = (setting, value) => s[setting] = value;
+Phrase.set = (setting, value) => s[setting] = value;
 
 // Mask chosen % of the given phrase
 let mask = (phrase, percentage) => {
@@ -47,14 +45,15 @@ let mask = (phrase, percentage) => {
 
 	// Randomly mask letters
 	while (howManyLettersToMask > 0) {
-		let random = Math.floor(Math.random() * phrase.length),
-			letter = phrase.charAt(random);
+		let randomInt = random(0, phrase.length),
+			letter = phrase.charAt(randomInt);
 
 		// Mask only letters
 		// Exclude: '_' and ' '
 		if (letter !== '_' && letter !== ' ') {
-			maskedPhrase = maskedPhrase.replaceAt(random, '_');
+			maskedPhrase = maskedPhrase.replaceAt(randomInt, '_');
 			howManyLettersToMask--;
+
 		} else {
 			continue;
 		}
@@ -64,7 +63,7 @@ let mask = (phrase, percentage) => {
 };
 
 // Draw masked phrase
-let draw = phraseContainer => phraseContainer.innerHTML = s.maskedPhrase;
+Phrase.draw = phraseContainer => phraseContainer.innerHTML = s.maskedPhrase;
 
 // Get visible letters of a masked phrase
 let getVisibleLetters = maskedPhrase => {
@@ -76,6 +75,7 @@ let getVisibleLetters = maskedPhrase => {
 		if (duplicateEls.indexOf(letter) === -1 && letter !== '_' && letter !== ' ') {
 			duplicateEls.push(letter);
 			return true;
+			
 		} else {
 			return false;
 		}
@@ -84,9 +84,4 @@ let getVisibleLetters = maskedPhrase => {
 	return visibleLetters;
 };
 
-module.exports = {
-	get,
-	set,
-	fetch,
-	draw
-};
+export default Phrase;

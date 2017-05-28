@@ -1,4 +1,6 @@
-let Tools = require('./tools.js');
+import Tools from './tools';
+
+let Popup = {};
 
 // Default settings
 let s = {
@@ -23,18 +25,18 @@ let close = () => {
 };
 
 // Open popup and set proper text
-let showWin = () => {
+Popup.showWin = () => {
 	s.popupEl.querySelector('h3').textContent = s.gameWonText;
 	show();
 };
 
-let showLose = () => {
+Popup.showLose = () => {
 	s.popupEl.querySelector('h3').textContent = s.gameLostText;
 	show();
 };
 
 // Initialize popup
-let init = config => {
+Popup.init = config => {
 	
 	// Get user's defined options
 	Tools.updateSettings(s, config);
@@ -55,8 +57,4 @@ let init = config => {
 	}, false);
 };
 
-module.exports = {
-	init,
-	showWin,
-	showLose
-};
+export default Popup;

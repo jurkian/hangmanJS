@@ -1,14 +1,14 @@
-let Tools = require('./tools.js'),
-	Phrase = require('./phrase.js'),
-	Alphabet = require('./alphabet.js'),
-	StatusBar = require('./status-bar.js'),
-	Popup = require('./popup.js');
+import Tools from './tools';
+import Phrase from './phrase';
+import Alphabet from './alphabet';
+import StatusBar from './status-bar';
+import Popup from './popup';
 
 // Default settings
 let s = {
-	phraseEl: document.getElementById('phrase'),
-	alphabetEl: document.getElementById('alphabet'),
-	hangmanEl: document.getElementById('hangman'),
+	phraseEl: document.querySelector('#phrase'),
+	alphabetEl: document.querySelector('#alphabet'),
+	hangmanEl: document.querySelector('#hangman'),
 	totalLives: 5
 };
 
@@ -75,9 +75,7 @@ let handleGameStart = () => {
 		// Draw the alphabet only once
 		if (isNewGame === false) {
 			Alphabet.draw()
-			.then(() => {
-				singleLettersEls = Alphabet.getLettersEls();
-			});
+			singleLettersEls = Alphabet.getLettersEls();
 		}
 
 		// Handle the click on each letter
@@ -179,6 +177,4 @@ let finishGame = status => {
 	resetGame();
 };
 
-module.exports = {
-	start
-};
+export default start;

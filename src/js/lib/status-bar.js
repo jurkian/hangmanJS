@@ -1,22 +1,24 @@
-let Tools = require('./tools.js');
+import Tools from './tools';
+
+let StatusBar = {};
 
 // Default settings
 let s = {
 	lives: 5,
-	statusBarEl: document.getElementById('game-info-bar'),
+	statusBarEl: document.querySelector('#game-info-bar'),
 	pointsElName: '.game-info-points',
 	livesElName: '.game-info-lives',
 	resetPointsName: '.reset-points',
 };
 
 // Local variables
-let	pointsEl = '',
+let pointsEl = '',
 	livesEl = '',
 	resetPointsEl = '';
 
 // Add x points to current score
 // Minimum score is 0, we don't need negative values
-let updatePoints = points => {
+StatusBar.updatePoints = points => {
 	let currentScore = getCurrentScore(),
 		newScore = currentScore + parseInt(points, 10);
 
@@ -42,11 +44,11 @@ let getCurrentScore = () => {
 	}
 };
 
-let drawLives = lives => livesEl.textContent = lives;
+StatusBar.drawLives = lives => livesEl.textContent = lives;
 
 let drawCurrentScore = () => pointsEl.textContent = getCurrentScore();
 
-let init = config => {
+StatusBar.init = config => {
 	
 	// Get user's defined options
 	Tools.updateSettings(s, config);
@@ -57,7 +59,7 @@ let init = config => {
 	resetPointsEl = s.statusBarEl.querySelector(s.resetPointsName);
 
 	drawCurrentScore();
-	drawLives(s.lives);
+	StatusBar.drawLives(s.lives);
 
 	resetPointsEl.addEventListener('click', () => {
 		resetPoints();
@@ -65,8 +67,4 @@ let init = config => {
 	}, false);
 };
 
-module.exports = {
-	init,
-	updatePoints,
-	drawLives
-};
+export default StatusBar;
