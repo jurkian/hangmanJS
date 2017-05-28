@@ -10,27 +10,21 @@ let Phrase = {};
 Phrase.fetch = () => {
 	return new Promise((resolve, reject) => {
 
-		let req = new XMLHttpRequest();
-		req.open('GET', 'api/words.json', true);
-
-		req.onload = () => {
+		fetch('api/words.json', {
+			method: 'GET'
+		})
+		.then((response) => response.json())
+		.then(data => {
 
 			// Get 1 random phrase
-			let json = JSON.parse(req.responseText),
-				random = Math.floor(Math.random() * json.length);
+			let random = Math.floor(Math.random() * data.length);
 
-			s.phrase = json[random].toUpperCase();
+			s.phrase = data[random].toUpperCase();
 			s.maskedPhrase = mask(s.phrase, 85);
 			s.visibleLetters = getVisibleLetters(s.maskedPhrase);
 
 			resolve(s.phrase);
-		};
-
-		req.onerror = () => {
-			reject(req.statusText);
-		};
-
-		req.send();
+		});
 	});
 };
 
