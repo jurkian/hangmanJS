@@ -36,7 +36,7 @@ Alphabet.draw = () => {
 			s.alphabetContainer.appendChild(singleLetterLi);
 		});
 
-		singleLettersEls = s.alphabetContainer.getElementsByTagName('li');
+		singleLettersEls = s.alphabetContainer.querySelectorAll('li');
 		resolve();
 	});
 };

@@ -6,9 +6,9 @@ import Popup from './popup';
 
 // Default settings
 let s = {
-	phraseEl: document.getElementById('phrase'),
-	alphabetEl: document.getElementById('alphabet'),
-	hangmanEl: document.getElementById('hangman'),
+	phraseEl: document.querySelector('#phrase'),
+	alphabetEl: document.querySelector('#alphabet'),
+	hangmanEl: document.querySelector('#hangman'),
 	totalLives: 5
 };
 

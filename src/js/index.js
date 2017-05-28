@@ -14,12 +14,12 @@ import start from './lib/game';
 // Run the game when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
 	let settings = {
-		phraseEl: document.getElementById('phrase'),
-		alphabetEl: document.getElementById('alphabet'),
-		hangmanEl: document.getElementById('hangman'),
+		phraseEl: document.querySelector('#phrase'),
+		alphabetEl: document.querySelector('#alphabet'),
+		hangmanEl: document.querySelector('#hangman'),
 		totalLives: 5,
 
-		statusBarEl: document.getElementById('game-info-bar'),
+		statusBarEl: document.querySelector('#game-info-bar'),
 		pointsElName: '.game-info-points',
 		livesElName: '.game-info-lives',
 		resetPointsName: '.reset-points',

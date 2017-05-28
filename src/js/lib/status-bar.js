@@ -5,7 +5,7 @@ let StatusBar = {};
 // Default settings
 let s = {
 	lives: 5,
-	statusBarEl: document.getElementById('game-info-bar'),
+	statusBarEl: document.querySelector('#game-info-bar'),
 	pointsElName: '.game-info-points',
 	livesElName: '.game-info-lives',
 	resetPointsName: '.reset-points',
