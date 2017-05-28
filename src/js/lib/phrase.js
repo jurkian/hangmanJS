@@ -9,7 +9,7 @@ let fetch = () => {
 	return new Promise((resolve, reject) => {
 
 		let req = new XMLHttpRequest();
-		req.open('GET', 'words.json', true);
+		req.open('GET', 'api/words.json', true);
 
 		req.onload = () => {
 
