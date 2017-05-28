@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const glob = require('glob');
-const PurifyCSSPlugin = require('purifycss-webpack');
 
 // Conditional builds for dev and prod
 let isProd = process.env.NODE_ENV === 'production';
