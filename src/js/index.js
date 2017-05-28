@@ -11,9 +11,8 @@ import './lib/polyfills';
 
 import start from './lib/game';
 
-// Run the game if all assets are loaded
-let init = () => {
-
+// Run the game when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
 	let settings = {
 		phraseEl: document.getElementById('phrase'),
 		alphabetEl: document.getElementById('alphabet'),
@@ -33,6 +32,4 @@ let init = () => {
 	};
 
 	start(settings);
-
-};
-window.addEventListener('load', init, false);
+});
