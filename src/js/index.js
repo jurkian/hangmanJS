@@ -7,9 +7,9 @@ import '../sass/site.scss';
 // API
 import '../api/words.json';
 
-import './lib/polyfills.js';
+import './lib/polyfills';
 
-let Game = require('./lib/game.js');
+import start from './lib/game';
 
 // Run the game if all assets are loaded
 let init = () => {
@@ -32,7 +32,7 @@ let init = () => {
 		openedClass: 'opened'
 	};
 
-	Game.start(settings);
+	start(settings);
 
 };
 window.addEventListener('load', init, false);

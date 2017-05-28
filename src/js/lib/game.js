@@ -1,8 +1,8 @@
-let Tools = require('./tools.js'),
-	Phrase = require('./phrase.js'),
-	Alphabet = require('./alphabet.js'),
-	StatusBar = require('./status-bar.js'),
-	Popup = require('./popup.js');
+import Tools from './tools';
+import Phrase from './phrase';
+import Alphabet from './alphabet';
+import StatusBar from './status-bar';
+import Popup from './popup';
 
 // Default settings
 let s = {
@@ -179,6 +179,4 @@ let finishGame = status => {
 	resetGame();
 };
 
-module.exports = {
-	start
-};
+export default start;

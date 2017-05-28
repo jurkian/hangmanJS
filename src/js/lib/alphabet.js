@@ -1,5 +1,7 @@
-let Tools = require('./tools.js'),
-	Phrase = require('./phrase.js');
+import Tools from './tools';
+import Phrase from './phrase';
+
+let Alphabet = {};
 
 // Settings
 let s = {
@@ -14,17 +16,17 @@ let singleLettersEls = {},
 	handleClicksFn = {};
 
 // Get user's defined options
-let init = config => {
+Alphabet.init = config => {
 	Tools.updateSettings(s, config);
 };
 
 // Get single letters as DOM elements
-let getLettersEls = () => {
+Alphabet.getLettersEls = () => {
 	return singleLettersEls;
 };
 
 // Draw alphabet
-let draw = () => {
+Alphabet.draw = () => {
 	return new Promise((resolve, reject) => {
 
 		s.alphabet.split('').forEach((el, index) => {
@@ -40,7 +42,7 @@ let draw = () => {
 };
 
 // Handle letter clicks
-let handleClicks = handleSingleClick => {
+Alphabet.handleClicks = handleSingleClick => {
 	if (typeof handleSingleClick === 'function') {
 		for (let el of singleLettersEls) {
 			el.addEventListener('click', handleSingleClick, false);
@@ -49,9 +51,9 @@ let handleClicks = handleSingleClick => {
 };
 
 // Uncover phrase parts
-let uncoverPhraseParts = () => {
+Alphabet.uncoverPhraseParts = () => {
 	Phrase.get('visibleLetters').forEach((el, index) => {
-		revealLetter(el);
+		Alphabet.revealLetter(el);
 	});
 };
 
@@ -64,7 +66,7 @@ let deactivateLetter = letter => {
 };
 
 // Reveal the letter (can be multiple letters)
-let revealLetter = letterToReveal => {
+Alphabet.revealLetter = letterToReveal => {
 
 	let maskedPhrase = Phrase.get('maskedPhrase'),
 		indexes = Tools.getAllIndexes(s.phrase, letterToReveal);
@@ -82,11 +84,4 @@ let revealLetter = letterToReveal => {
 	deactivateLetter(letterToReveal);
 };
 
-module.exports = {
-	init,
-	draw,
-	handleClicks,
-	getLettersEls,
-	uncoverPhraseParts,
-	revealLetter
-};
+export default Alphabet;

@@ -4,8 +4,10 @@ let s = {
 	visibleLetters: ''
 };
 
+let Phrase = {};
+
 // Get random phrase
-let fetch = () => {
+Phrase.fetch = () => {
 	return new Promise((resolve, reject) => {
 
 		let req = new XMLHttpRequest();
@@ -33,9 +35,9 @@ let fetch = () => {
 };
 
 // Getter and setter
-let get = value => s[value];
+Phrase.get = value => s[value];
 
-let set = (setting, value) => s[setting] = value;
+Phrase.set = (setting, value) => s[setting] = value;
 
 // Mask chosen % of the given phrase
 let mask = (phrase, percentage) => {
@@ -64,7 +66,7 @@ let mask = (phrase, percentage) => {
 };
 
 // Draw masked phrase
-let draw = phraseContainer => phraseContainer.innerHTML = s.maskedPhrase;
+Phrase.draw = phraseContainer => phraseContainer.innerHTML = s.maskedPhrase;
 
 // Get visible letters of a masked phrase
 let getVisibleLetters = maskedPhrase => {
@@ -84,9 +86,4 @@ let getVisibleLetters = maskedPhrase => {
 	return visibleLetters;
 };
 
-module.exports = {
-	get,
-	set,
-	fetch,
-	draw
-};
+export default Phrase;
