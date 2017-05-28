@@ -1,7 +1,7 @@
 @import "bootstrap.scss";
 
 body {
-	background: url('../images/background.jpg') no-repeat;
+	background: url('../img/background.jpg') no-repeat;
 	background-size: cover;
 }
 
@@ -30,13 +30,13 @@ body {
 /* Gallows */
 
 .gallows {
-	background: url('../images/gallows.png') no-repeat;
+	background: url('../img/gallows.png') no-repeat;
 	width: 250px;
 	height: 500px;
 	position: relative;
 
 	#hangman {
-		background: url('../images/hangman.png') no-repeat;
+		background: url('../img/hangman.png') no-repeat;
 		width: 125px;
 		height: 287px;
 		position: absolute;

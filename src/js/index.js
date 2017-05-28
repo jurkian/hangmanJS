@@ -1,6 +1,15 @@
-require('./polyfills.js');
+// General files
+import '../robots.txt';
 
-let Game = require('./game.js');
+// Scss
+import '../sass/site.scss';
+
+// API
+import '../api/words.json';
+
+import './lib/polyfills.js';
+
+let Game = require('./lib/game.js');
 
 // Run the game if all assets are loaded
 let init = () => {

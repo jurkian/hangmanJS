@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title><%= htmlWebpackPlugin.options.title %></title>
+
+   <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro&amp;subset=latin-ext" rel="stylesheet">
+</head>
+
+<body>
+   <div id="game-info-bar" class="game-info-bar">
+      <b>Points: </b><span class="game-info-points"></span> <small class="reset-points">(reset)</small>,
+      <b>lives left: </b><span class="game-info-lives"></span>
+   </div>
+
+   <section id="game" class="container">
+      <div class="row">
+         <div class="gallows-container col-lg-4 col-md-4 col-sm-5 col-lg-offset-2 col-md-offset-1">
+            <div class="gallows">
+               <div id="hangman"></div>
+            </div>
+         </div>
+         <div class="alphabet-container col-lg-4 col-md-5 col-sm-6 col-xs-12 col-md-offset-1 col-sm-offset-1">
+            <div id="phrase"></div>
+            <ul id="alphabet"></ul>
+         </div>
+      </div>
+   </section>
+
+   <div class="popup-overlay">
+      <div class="popup">
+         <h3>Congratulations, you've won!</h3>
+         <button class="btn btn-primary">Play again</button>
+      </div>
+   </div>
+</body>
+
+</html>
